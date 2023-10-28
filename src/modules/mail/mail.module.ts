@@ -1,19 +1,19 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 import { EmailConfirmationController } from './email-confirmation/email-confirmation.controller';
+import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 import { MailService } from './mail.service';
 
 @Module({
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
+        host: process.env.MAILDEV_HOST,
         secure: true,
-        port: 465,
+        port: Number(process.env.MAILDEV_PORT),
         auth: {
-          user: process.env.USER_EMAIL,
-          pass: process.env.PASS_EMAIL,
+          user: process.env.MAILDEV_USER,
+          pass: process.env.MAILDEV_PASSWORD,
         },
         ignoreTLS: true,
       },
