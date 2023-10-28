@@ -19,9 +19,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "commit": "git-cz",
-    "prisma:studio": "npx prisma studio",
-    "compose:up": "docker compose -p connectattoo --env-file .env up --build -d",
-    "compose:down": "docker compose -p connectattoo down --remove-orphans --volumes && docker compose rm -fsv"
+    "compose:up": "docker compose -f docker-compose.dev.yml -p connectattoo --env-file .env up --build -d && prisma db push",
+    "compose:down": "docker compose -f docker-compose.dev.yml -p connectattoo down --remove-orphans --volumes && docker compose rm -fsv",
+    "prisma:db": "npx prisma db push",
+    "prisma:studio": "npx prisma studio --port 5555 --browser none"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.9.1",
