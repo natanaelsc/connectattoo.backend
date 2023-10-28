@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
 import { AppService } from 'src/app.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class UserService {
   public async create(createUserDto: CreateUserDto) {
     const data = {
       ...createUserDto,
-      confirmation_key: uuidv4(),
+      confirmation_key: randomUUID().replace(/-/g, ''),
       confirmation_sit: 0,
       password: await bcrypt.hash(createUserDto.password, 10),
     };
