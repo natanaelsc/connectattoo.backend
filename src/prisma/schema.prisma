@@ -16,9 +16,8 @@ model User {
   lastName String
   email String    @unique
   password String
-  birthday String
-  confirmation_key String
-  confirmation_sit Int
+  birthDate String
+  isEmailConfirmed Boolean @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 }
