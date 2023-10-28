@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AppService } from './app.service';
-import { CurrentUser } from './auth/decorators/current-user.decorator';
-import { IsPublic } from './auth/decorators/is-public.decorator';
+import { CurrentUser } from './modules/auth/decorators/current-user.decorator';
+import { IsPublic } from './modules/auth/decorators/is-public.decorator';
 import { UserService } from './modules/user/user.service';
 
 @Controller()
