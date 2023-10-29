@@ -12,13 +12,12 @@ datasource db {
 
 model User {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName String
   email String    @unique
   password String
-  name String
-  lastName String
-  birthday String
-  confirmation_key String
-  confirmation_sit Int
+  birthDate String
+  isEmailConfirmed Boolean @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 }
