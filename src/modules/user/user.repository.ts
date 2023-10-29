@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
-import { CreateUser } from './create-user/create-user';
-import { User } from './user.entity';
+import { CreateUser, UpdateUser, User } from './user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -15,18 +14,21 @@ export class UserRepository {
     return user as User;
   }
 
-  async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { email } }).catch(() => null);
-    return user;
+  async update(updateUser: UpdateUser): Promise<User> {
+    const { id, email, isEmailConfirmed } = updateUser;
+    const user = await this.prisma.user
+      .update({
+        where: { id, email },
+        data: { isEmailConfirmed },
+      })
+      .catch((error) => handleErrors(error));
+    return user as User;
   }
 
-  async updateConfirmationSit(
-    userId: string,
-    isEmailConfirmed: boolean,
-  ): Promise<void> {
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { isEmailConfirmed },
-    });
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user
+      .findUnique({ where: { email } })
+      .catch(() => null);
+    return user;
   }
 }
