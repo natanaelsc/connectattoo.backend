@@ -8,7 +8,7 @@ export class MailService {
 
   public async sendEmail(mailDto: MailDto): Promise<void> {
     await this.mailerService.sendMail({
-      from: `"Connectattoo" <${process.env.MAIL_FROM}>`,
+      from: `"Connectattoo" <${process.env.MAILDEV_FROM}>`,
       to: mailDto.email,
       subject: mailDto.subject,
       html: mailDto.html,

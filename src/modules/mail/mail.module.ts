@@ -12,8 +12,8 @@ import { MailService } from './mail.service';
         secure: true,
         port: Number(process.env.MAILDEV_PORT),
         auth: {
-          user: process.env.MAILDEV_USER,
-          pass: process.env.MAILDEV_PASSWORD,
+          user: process.env.MAILDEV_INCOMING_USER,
+          pass: process.env.MAILDEV_INCOMING_PASS,
         },
         ignoreTLS: true,
       },
