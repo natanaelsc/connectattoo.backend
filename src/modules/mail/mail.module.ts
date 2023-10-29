@@ -1,9 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { EmailConfirmationController } from './email-confirmation/email-confirmation.controller';
-import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
-import { MailService } from './mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { MailService } from './mail.service';
 
 @Module({
   imports: [
@@ -21,8 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
       },
     }),
   ],
-  controllers: [EmailConfirmationController],
-  providers: [EmailConfirmationService, MailService],
-  exports: [EmailConfirmationService, MailService],
+  providers: [MailService],
+  exports: [MailService],
 })
 export class MailModule {}
