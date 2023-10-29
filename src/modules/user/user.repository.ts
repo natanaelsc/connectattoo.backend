@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
 import { CreateUser } from './create-user/create-user';
-import { User } from './user.interface';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -16,7 +16,7 @@ export class UserRepository {
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({ where: { email } }).catch(() => null);
     return user;
   }
 
