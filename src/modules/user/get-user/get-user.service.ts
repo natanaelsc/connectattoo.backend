@@ -4,9 +4,9 @@ import { UserRepository } from '../user.repository';
 
 @Injectable()
 export class GetUserService {
-    constructor(private readonly userRepository: UserRepository) {}
-    
-    async getByEmail(email: string): Promise<User> {
-        return this.userRepository.findByEmail(email);
-    }
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async getByEmail(email: string): Promise<User> {
+    return this.userRepository.findByEmail(email);
+  }
 }
