@@ -1,18 +1,18 @@
-@host = http://localhost:3000
 @apiVersion = v1
+@host = http://localhost:3000/api/{{apiVersion}}
 @contentType = application/json
 
 # User
-@name = João Silva
-@email = 
-@password = Jo@o2023
-@birthDate = 2000-10-02
+@name = [string]
+@email = [string]
+@password = 5fC5gda@
+@birthDate = 1990-10-08
 
 # Token JWT (Email Confirmation)
 @token = 
 
 ### Create User
-POST {{host}}/api/{{apiVersion}}/clients
+POST {{host}}/clients
 Content-Type: {{contentType}}
 
 {
@@ -24,4 +24,13 @@ Content-Type: {{contentType}}
 }
 
 ### Confirm Email
-GET  {{host}}/api/{{apiVersion}}/email/confirmation?token={{token}}
+GET  {{host}}/email/confirmation?token={{token}}
+
+### Authenticate User
+POST {{host}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
