@@ -4,15 +4,15 @@
 
 # User
 @name = João Silva
-@email = natanael96@live.com
+@email = 
 @password = Jo@o2023
 @birthDate = 2000-10-02
 
-# Email confirmation token
+# Token JWT (Email Confirmation)
 @token = 
 
-###
-POST {{host}}/api/{{apiVersion}}/users
+### Create User
+POST {{host}}/api/{{apiVersion}}/clients
 Content-Type: {{contentType}}
 
 {
@@ -23,5 +23,5 @@ Content-Type: {{contentType}}
     "birthDate": "{{birthDate}}"
 }
 
-###
-GET {{host}}/api/{{apiVersion}}/users/email/confirmation?token={{token}}
+### Confirm Email
+GET  {{host}}/api/{{apiVersion}}/email/confirmation?token={{token}}
