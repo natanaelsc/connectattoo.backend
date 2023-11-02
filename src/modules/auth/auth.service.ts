@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import { TattooClient } from '../tattoo-client/tattoo-client';
+import { TattooClientRepository } from '../tattoo-client/tattoo-client.repository';
 import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly tattooClientRepository: TattooClientRepository,
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: User): Promise<UserToken> {
+  async login(user: TattooClient): Promise<UserToken> {
     const payload: UserPayload = {
       sub: user.id,
       email: user.email,
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.userService.getByEmail(email);
+    const user = await this.tattooClientRepository.findByEmail(email);
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);

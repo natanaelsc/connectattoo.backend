@@ -1,4 +1,4 @@
-export interface User {
+export class TattooClient {
   readonly id: string;
   readonly firstName: string;
   readonly lastName: string;

@@ -1,7 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { MailDto } from './mail.dto';
+import { Mail } from './mail';
 
 @Injectable()
 export class MailService {
@@ -9,6 +9,15 @@ export class MailService {
     private readonly mailerService: MailerService,
     private readonly jwtService: JwtService,
   ) {}
+
+  async sendMail(mail: Mail): Promise<void> {
+    await this.mailerService.sendMail({
+      from: `"Connectattoo" <${process.env.MAILDEV_FROM}>`,
+      to: mail.email,
+      subject: mail.subject,
+      html: mail.html,
+    });
+  }
 
   async sendVerificationLink(email: string): Promise<void> {
     const payload = { email };
@@ -19,7 +28,7 @@ export class MailService {
 
     const url = `${process.env.EMAIL_CONFIRMATION_URL}?token=${token}`;
 
-    const mailDto = {
+    const mail = {
       email,
       subject: 'Confirmação de Cadastro',
       html: `<p> Olá, seu cadastro na Connectattoo está quase pronta.
@@ -29,7 +38,7 @@ export class MailService {
       <p><a href="${url}">Clique aqui para confirmar seu cadastro.</a></p>`,
     };
 
-    await this.sendEmail(mailDto);
+    await this.sendMail(mail);
   }
 
   async decodeConfirmationToken(token: string): Promise<string> {
@@ -46,14 +55,5 @@ export class MailService {
       }
       throw new BadRequestException('Link inválido');
     }
-  }
-
-  public async sendEmail(mailDto: MailDto): Promise<void> {
-    await this.mailerService.sendMail({
-      from: `"Connectattoo" <${process.env.MAILDEV_FROM}>`,
-      to: mailDto.email,
-      subject: mailDto.subject,
-      html: mailDto.html,
-    });
   }
 }

@@ -1,9 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from 'src/modules/user/user.entity';
+
+import { TattooClient } from 'src/modules/tattoo-client/tattoo-client';
 import { AuthRequest } from '../models/AuthRequest';
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext): User => {
+  (data: unknown, context: ExecutionContext): TattooClient => {
     const request = context.switchToHttp().getRequest<AuthRequest>();
 
     return request.user;

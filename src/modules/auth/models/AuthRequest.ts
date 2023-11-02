@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { User } from 'src/modules/user/user.entity';
+import { TattooClient } from 'src/modules/tattoo-client/tattoo-client';
 
 export interface AuthRequest extends Request {
-  user: User;
+  user: TattooClient;
 }
