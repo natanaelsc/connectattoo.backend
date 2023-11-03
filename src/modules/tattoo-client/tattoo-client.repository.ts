@@ -26,11 +26,4 @@ export class TattooClientRepository {
       .catch((error) => handleErrors(error));
     return tattooClient as TattooClient;
   }
-
-  async findByEmail(email: string): Promise<TattooClient> {
-    const user = await this.prisma.tattooClient
-      .findUnique({ where: { email } })
-      .catch(() => null);
-    return user;
-  }
 }
