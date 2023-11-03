@@ -1,8 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { TattooClientRepository } from '../tattoo-client/tattoo-client.repository';
-import { UserLoginDto, UserPayload, UserToken, UserType } from './auth.dto';
+import { TokenPayload, UserToken } from './auth.interface';
+import { UserLoginDto } from './dtos/user-login.dto';
+import { UserType } from './enums/user-type.enum';
 
 @Injectable()
 export class AuthService {
@@ -13,39 +15,24 @@ export class AuthService {
 
   async login(userLoginDto: UserLoginDto): Promise<UserToken> {
     const user = await this.validate(userLoginDto.email, userLoginDto.password);
-
     delete userLoginDto.password;
-
-    const payload: UserPayload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      type: user.type,
-    };
-
-    const userToken: UserToken = {
-      access_token: this.jwtService.sign(payload),
-    };
-
+    const userToken = await this.generateToken(user);
     return userToken;
   }
 
-  async validate(email: string, password: string) {
+  async validate(email: string, password: string): Promise<ValidUser> {
     const user = await this.tattooClientRepository.findByEmail(email);
 
-    if (user === null) throw new BadRequestException('Credenciais inválidas');
+    if (user === null) throw new UnauthorizedException('Credenciais inválidas');
 
     if (user.isEmailConfirmed === false) {
-      throw new BadRequestException(
-        'Usuário não verificado, por favor verifique seu e-mail',
-      );
+      throw new UnauthorizedException('Usuário não verificado');
     }
 
-    await this.verifyPassword(password, user.password);
+    await this.checkPassword(password, user.password);
 
     const validUser: ValidUser = {
       id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
       email: user.email,
       type: UserType.CLIENT,
     };
@@ -53,14 +40,27 @@ export class AuthService {
     return validUser;
   }
 
-  private async verifyPassword(
+  async generateToken(user: ValidUser): Promise<UserToken> {
+    const payload: TokenPayload = {
+      id: user.id,
+      email: user.email,
+      type: user.type,
+    };
+
+    const userToken: UserToken = {
+      access_token: this.jwtService.sign(payload),
+    };
+    return userToken;
+  }
+
+  private async checkPassword(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
     const isPasswordMatching = await bcrypt.compare(password, hashedPassword);
 
     if (isPasswordMatching === false)
-      throw new BadRequestException('Credenciais inválidas');
+      throw new UnauthorizedException('Credenciais inválidas');
 
     return isPasswordMatching;
   }
@@ -69,6 +69,5 @@ export class AuthService {
 class ValidUser {
   id: string;
   email: string;
-  name: string;
   type: string;
 }
