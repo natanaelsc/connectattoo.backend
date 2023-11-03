@@ -1,6 +1,7 @@
 import { Address } from '../interfaces/address.interface';
 
 export class CreateUser {
+  address?: Address;
   readonly isEmailConfirmed: boolean;
 
   private constructor(
@@ -9,7 +10,6 @@ export class CreateUser {
     readonly email: string,
     readonly password: string,
     readonly birthDate: string,
-    readonly address?: Address,
   ) {
     this.birthDate = new Date(birthDate).toISOString().slice(0, 10);
   }
@@ -20,15 +20,7 @@ export class CreateUser {
     email: string,
     password: string,
     birthDate: string,
-    address?: Address,
   ): CreateUser {
-    return new CreateUser(
-      firstName,
-      lastName,
-      email,
-      password,
-      birthDate,
-      address,
-    );
+    return new CreateUser(firstName, lastName, email, password, birthDate);
   }
 }
