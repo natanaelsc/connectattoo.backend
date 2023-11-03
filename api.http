@@ -8,10 +8,13 @@
 @password = 5fC5gda@
 @birthDate = 1990-10-08
 
+@access_token = {{UserToken.response.body.access_token}}
+
 # Token JWT (Email Confirmation)
 @token =
 
-### Create User
+### Create User Client
+# @name UserToken
 POST {{host}}/users/client
 Content-Type: {{contentType}}
 
@@ -23,10 +26,32 @@ Content-Type: {{contentType}}
     "birthDate": "{{birthDate}}"
 }
 
+### Create User Artist
+# @name UserToken
+POST {{host}}/users/artist
+Content-Type: {{contentType}}
+
+{
+    "name": "{{name}}",
+    "email": "{{email}}",
+    "password": "{{password}}",
+    "passwordConfirmation": "{{password}}",
+    "birthDate": "{{birthDate}}",
+    "address": {
+      "street": "Rua 1",
+      "number": "123",
+      "city": "São Paulo",
+      "state": "SP",
+      "country": "Brasil",
+      "zipCode": "12345678"
+    }
+}
+
 ### Confirm Email
 GET  {{host}}/email/confirmation?token={{token}}
 
 ### Authenticate User
+# @name UserToken
 POST {{host}}/auth/login
 Content-Type: {{contentType}}
 
