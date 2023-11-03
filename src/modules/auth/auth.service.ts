@@ -1,53 +1,40 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { TattooClientRepository } from '../tattoo-client/tattoo-client.repository';
 import { UserLoginDto } from './dtos/user-login.dto';
 import { UserType } from './enums/user-type.enum';
-import { TokenPayload } from './interfaces/token-payload.interface';
+import { Payload } from './interfaces/payload.interface';
 import { UserToken } from './interfaces/user-token.interface';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly tattooClientRepository: TattooClientRepository,
-    private readonly jwtService: JwtService,
+    private readonly jwtStrategy: JwtStrategy,
   ) {}
 
   async login(userLoginDto: UserLoginDto): Promise<UserToken> {
-    const tokenPayload = await this.generatePayload(userLoginDto);
+    const { email, password } = userLoginDto;
+    const payload = await this.validate(email, password);
     delete userLoginDto.password;
-    const userToken = await this.generateToken(tokenPayload);
+    const userToken = await this.jwtStrategy.getUserToken(payload);
     return userToken;
   }
 
-  async generatePayload(userLoginDto: UserLoginDto): Promise<TokenPayload> {
-    const user = await this.tattooClientRepository.findByEmail(
-      userLoginDto.email,
-    );
-
+  async validate(email: string, password: string): Promise<Payload> {
+    const user = await this.tattooClientRepository.findByEmail(email);
     if (user === null) throw new UnauthorizedException('Credenciais inválidas');
-
     if (user.isEmailConfirmed === false) {
       throw new UnauthorizedException('Usuário não verificado');
     }
-
-    await this.checkPassword(userLoginDto.password, user.password);
-
-    const tokenPayload: TokenPayload = {
+    await this.checkPassword(password, user.password);
+    const payload: Payload = {
       sub: user.id,
       email: user.email,
       type: UserType.CLIENT,
     };
-
-    return tokenPayload;
-  }
-
-  async generateToken(tokenPayload: TokenPayload): Promise<UserToken> {
-    const userToken: UserToken = {
-      access_token: this.jwtService.sign(tokenPayload),
-    };
-    return userToken;
+    return payload;
   }
 
   private async checkPassword(

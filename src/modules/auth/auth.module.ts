@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TattooClientModule } from '../tattoo-client/tattoo-client.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -12,8 +13,8 @@ import { AuthService } from './auth.service';
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [JwtStrategy],
 })
 export class AuthModule {}
