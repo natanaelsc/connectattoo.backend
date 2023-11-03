@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserType } from '../auth/enums/user-type.enum';
+import { AccountType } from '../auth/enums/account-type.enum';
 import { UserToken } from '../auth/interfaces/user-token.interface';
 import { MailService } from '../mail/mail.service';
+import { CreateUserDto } from '../user/dtos/create-user.dto';
 import { JwtStrategy } from './../auth/strategies/jwt.strategy';
-import { CreateUserDto } from './tattoo-client.dto';
 import { TattooClientService } from './tattoo-client.service';
 
 @Controller('/users/client')
@@ -22,7 +22,7 @@ export class TattooClientController {
     const userToken = await this.jwtStrategy.getUserToken({
       sub: user.id,
       email: user.email,
-      type: UserType.CLIENT,
+      type: AccountType.CLIENT,
     });
     return userToken;
   }
