@@ -3,15 +3,3 @@ export interface Mail {
   subject: string;
   html: string;
 }
-
-export interface Payload {
-  email: string;
-  user: User;
-  iat?: number;
-  exp?: number;
-}
-
-export enum User {
-  CLIENT = 'client',
-  ARTIST = 'artist',
-}
