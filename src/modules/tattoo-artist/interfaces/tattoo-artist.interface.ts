@@ -1,4 +1,4 @@
-import { Address } from './address.interface';
+import { TattooArtistAddress } from './tattoo-artist-address.interface';
 
 export interface TattooArtist {
   id: string;
@@ -8,5 +8,5 @@ export interface TattooArtist {
   password: string;
   birthDate: string;
   isEmailConfirmed: boolean;
-  address: Address;
+  address: TattooArtistAddress;
 }

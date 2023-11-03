@@ -1,4 +1,4 @@
-export interface Address {
+export interface TattooArtistAddress {
   id: string;
   street: string;
   number: string;
