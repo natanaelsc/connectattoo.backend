@@ -51,9 +51,9 @@ export class MailService {
       }
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
-        throw new BadRequestException('Link expirado');
+        throw new BadRequestException('Token expirado');
       }
-      throw new BadRequestException('Link inválido');
+      throw new BadRequestException('Token inválido');
     }
   }
 }
