@@ -1,15 +1,15 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Global, Module, forwardRef } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { TattooClientModule } from '../tattoo-client/tattoo-client.module';
 import { EmailConfirmationController } from './email-confirmation/email-confirmation.controller';
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 import { MailService } from './mail.service';
+import { UserModule } from '../user/user.module';
 
 @Global()
 @Module({
   imports: [
-    forwardRef(() => TattooClientModule),
+    UserModule,
     JwtModule,
     MailerModule.forRoot({
       transport: {
@@ -26,6 +26,6 @@ import { MailService } from './mail.service';
   ],
   controllers: [EmailConfirmationController],
   providers: [MailService, EmailConfirmationService],
-  exports: [MailService, EmailConfirmationService],
+  exports: [MailService],
 })
 export class MailModule {}
