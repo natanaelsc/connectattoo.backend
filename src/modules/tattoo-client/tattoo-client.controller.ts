@@ -6,7 +6,7 @@ import { MailService } from '../mail/mail.service';
 import { CreateUserDto } from './tattoo-client.dto';
 import { TattooClientService } from './tattoo-client.service';
 
-@Controller('/clients')
+@Controller('/users/client')
 export class TattooClientController {
   constructor(
     private readonly tattooClientService: TattooClientService,

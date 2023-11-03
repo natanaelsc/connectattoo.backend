@@ -9,10 +9,10 @@
 @birthDate = 1990-10-08
 
 # Token JWT (Email Confirmation)
-@token = 
+@token =
 
 ### Create User
-POST {{host}}/clients
+POST {{host}}/users/client
 Content-Type: {{contentType}}
 
 {
