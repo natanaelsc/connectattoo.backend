@@ -1,3 +1,5 @@
+import { Address } from './address.interface';
+
 export interface User {
   id: string;
   firstName: string;
@@ -6,4 +8,5 @@ export interface User {
   password: string;
   birthDate: string;
   isEmailConfirmed: boolean;
+  address?: Address;
 }
