@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { TattooClient } from '../tattoo-client/tattoo-client';
 import { TattooClientRepository } from '../tattoo-client/tattoo-client.repository';
-import { UserPayload } from './models/UserPayload';
-import { UserToken } from './models/UserToken';
+import { UserLoginDto, UserPayload, UserToken, UserType } from './auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,31 +11,64 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: TattooClient): Promise<UserToken> {
+  async login(userLoginDto: UserLoginDto): Promise<UserToken> {
+    const user = await this.validate(userLoginDto.email, userLoginDto.password);
+
+    delete userLoginDto.password;
+
     const payload: UserPayload = {
-      sub: user.id,
+      id: user.id,
+      name: user.name,
       email: user.email,
-      name: `${user.firstName} ${user.lastName}`,
+      type: user.type,
     };
 
-    return {
+    const userToken: UserToken = {
       access_token: this.jwtService.sign(payload),
     };
+
+    return userToken;
   }
 
-  async validateUser(email: string, password: string) {
+  async validate(email: string, password: string) {
     const user = await this.tattooClientRepository.findByEmail(email);
 
-    if (user) {
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (user === null) throw new BadRequestException('Credenciais inválidas');
 
-      if (isPasswordValid) {
-        return {
-          ...user,
-          password: undefined,
-        };
-      }
+    if (user.isEmailConfirmed === false) {
+      throw new BadRequestException(
+        'Usuário não verificado, por favor verifique seu e-mail',
+      );
     }
-    throw new Error('Email ou senha incorreto');
+
+    await this.verifyPassword(password, user.password);
+
+    const validUser: ValidUser = {
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      type: UserType.CLIENT,
+    };
+
+    return validUser;
   }
+
+  private async verifyPassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    const isPasswordMatching = await bcrypt.compare(password, hashedPassword);
+
+    if (isPasswordMatching === false)
+      throw new BadRequestException('Credenciais inválidas');
+
+    return isPasswordMatching;
+  }
+}
+
+class ValidUser {
+  id: string;
+  email: string;
+  name: string;
+  type: string;
 }

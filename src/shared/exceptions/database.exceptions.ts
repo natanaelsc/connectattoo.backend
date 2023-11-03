@@ -8,6 +8,8 @@ export class P2002Exception extends UnprocessableEntityException {
 
 export class P2031Exception extends UnprocessableEntityException {
   constructor() {
-    super('Prisma needs to perform transactions, which requires your MongoDB server to be run as a replica set.');
+    super(
+      'Prisma needs to perform transactions, which requires your MongoDB server to be run as a replica set.',
+    );
   }
 }
