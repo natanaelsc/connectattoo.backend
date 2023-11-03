@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
-import { CreateUser, TattooClient, UpdateUser } from './tattoo-client';
+import { CreateUser } from '../user/models/create-user';
+import { UpdateUser } from '../user/models/update-user';
+import { TattooClient } from './tattoo-client';
 
 @Injectable()
 export class TattooClientRepository {

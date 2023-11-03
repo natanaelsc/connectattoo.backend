@@ -1,19 +1,21 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUser, TattooClient } from './tattoo-client';
-import { CreateUserDto } from './tattoo-client.dto';
+import { CreateUserDto } from '../user/dtos/create-user.dto';
+import { CreateUser } from '../user/models/create-user';
+import { UserRepository } from '../user/user.repository';
+import { TattooClient } from './tattoo-client';
 import { TattooClientRepository } from './tattoo-client.repository';
 
 @Injectable()
 export class TattooClientService {
   constructor(
     private readonly tattooClientRepository: TattooClientRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<TattooClient> {
     const email = createUserDto.email;
-    const emailAlreadyInUse =
-      await this.tattooClientRepository.findByEmail(email);
+    const emailAlreadyInUse = await this.userRepository.findByEmail(email);
 
     if (emailAlreadyInUse !== null) {
       throw new BadRequestException(`Usuário já cadastrado`);
