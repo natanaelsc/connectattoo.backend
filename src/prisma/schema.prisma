@@ -21,3 +21,30 @@ model TattooClient {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 }
+
+model TattooArtist {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName String
+  email String    @unique
+  password String
+  birthDate String
+  isEmailConfirmed Boolean @default(false)
+  address TattooArtistAddress?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model TattooArtistAddress {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  street String
+  number String
+  city String
+  state String
+  country String @default("Brazil")
+  zipCode String
+  tattooArtistId String @unique @db.ObjectId
+  tattooArtist TattooArtist @relation(fields: [tattooArtistId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}

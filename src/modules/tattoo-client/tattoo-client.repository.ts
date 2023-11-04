@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
-import { CreateUser, TattooClient, UpdateUser } from './tattoo-client';
+import { CreateUser } from '../user/models/create-user';
+import { TattooClient } from './tattoo-client';
 
 @Injectable()
 export class TattooClientRepository {
@@ -12,23 +13,5 @@ export class TattooClientRepository {
       .create({ data: createUser })
       .catch((error) => handleErrors(error));
     return tattooClient as TattooClient;
-  }
-
-  async update(updateUser: UpdateUser): Promise<TattooClient> {
-    const { id, email, isEmailConfirmed } = updateUser;
-    const tattooClient = await this.prisma.tattooClient
-      .update({
-        where: { id, email },
-        data: { isEmailConfirmed },
-      })
-      .catch((error) => handleErrors(error));
-    return tattooClient as TattooClient;
-  }
-
-  async findByEmail(email: string): Promise<TattooClient> {
-    const user = await this.prisma.tattooClient
-      .findUnique({ where: { email } })
-      .catch(() => null);
-    return user;
   }
 }

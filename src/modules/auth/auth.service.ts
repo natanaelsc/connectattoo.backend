@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { TattooClientRepository } from '../tattoo-client/tattoo-client.repository';
+import { UserRepository } from '../user/user.repository';
 import { UserLoginDto } from './dtos/user-login.dto';
-import { UserType } from './enums/user-type.enum';
+import { AccountType } from './enums/account-type.enum';
 import { Payload } from './interfaces/payload.interface';
 import { UserToken } from './interfaces/user-token.interface';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -10,7 +10,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly tattooClientRepository: TattooClientRepository,
+    private readonly userRepository: UserRepository,
     private readonly jwtStrategy: JwtStrategy,
   ) {}
 
@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async validate(email: string, password: string): Promise<Payload> {
-    const user = await this.tattooClientRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
     if (user === null) throw new UnauthorizedException('Credenciais inválidas');
     if (user.isEmailConfirmed === false) {
       throw new UnauthorizedException('Usuário não verificado');
@@ -32,7 +32,7 @@ export class AuthService {
     const payload: Payload = {
       sub: user.id,
       email: user.email,
-      type: UserType.CLIENT,
+      type: AccountType.CLIENT,
     };
     return payload;
   }
