@@ -3,8 +3,8 @@
 @contentType = application/json
 
 # User
-@name = Natanael Silva
-@email = natanael96@live.com
+@name = [string]
+@email = [string]
 @password = 5fC5gda@
 @birthDate = 1990-10-08
 
