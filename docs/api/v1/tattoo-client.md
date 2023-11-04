@@ -12,7 +12,8 @@
       "name": "João Silva",
       "email": "joãosilva@gmail.com"
       "password": "5fC5gda@"
-      "birthDate": "1990-10-08"
+      "birthDate": "1990-10-08",
+      "termsAccepted": true
     }
 
 ### Response

@@ -3,8 +3,8 @@
 @contentType = application/json
 
 # User
-@name = [string]
-@email = [string]
+@name = Natanael Silva
+@email = natanael96@live.com
 @password = 5fC5gda@
 @birthDate = 1990-10-08
 
@@ -23,7 +23,8 @@ Content-Type: {{contentType}}
     "email": "{{email}}",
     "password": "{{password}}",
     "passwordConfirmation": "{{password}}",
-    "birthDate": "{{birthDate}}"
+    "birthDate": "{{birthDate}}",
+    "termsAccepted": true
 }
 
 ### Create User Artist
@@ -37,6 +38,7 @@ Content-Type: {{contentType}}
     "password": "{{password}}",
     "passwordConfirmation": "{{password}}",
     "birthDate": "{{birthDate}}",
+    "termsAccepted": true,
     "address": {
       "street": "Rua 1",
       "number": "123",

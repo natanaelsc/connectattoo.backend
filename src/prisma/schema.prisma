@@ -17,6 +17,7 @@ model TattooClient {
   email String    @unique
   password String
   birthDate String
+  termsAccepted Boolean @default(false)
   isEmailConfirmed Boolean @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -29,6 +30,7 @@ model TattooArtist {
   email String    @unique
   password String
   birthDate String
+  termsAccepted Boolean @default(false)
   isEmailConfirmed Boolean @default(false)
   address TattooArtistAddress?
   createdAt  DateTime  @default(now())
