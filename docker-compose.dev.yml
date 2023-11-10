@@ -10,7 +10,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-    networks: 
+      MONGO_INITDB_DATABASE: connectattoo
+    networks:
       - connectattoo
 
   mongo-express:
@@ -24,10 +25,10 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD}
       ME_CONFIG_MONGODB_URL: ${MONGODB_URL}
-    networks: 
+    networks:
       - connectattoo
 
-networks: 
+networks:
     connectattoo:
       name: connectattoo
       driver: bridge
