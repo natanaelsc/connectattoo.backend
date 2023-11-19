@@ -17,6 +17,7 @@ model TattooClient {
   email String    @unique
   password String
   birthDate String
+  termsAccepted Boolean @default(false)
   isEmailConfirmed Boolean @default(false)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -29,6 +30,7 @@ model TattooArtist {
   email String    @unique
   password String
   birthDate String
+  termsAccepted Boolean @default(false)
   isEmailConfirmed Boolean @default(false)
   address TattooArtistAddress?
   createdAt  DateTime  @default(now())
@@ -44,7 +46,7 @@ model TattooArtistAddress {
   country String @default("Brazil")
   zipCode String
   tattooArtistId String @unique @db.ObjectId
-  tattooArtist TattooArtist @relation(fields: [tattooArtistId], references: [id])
+  tattooArtist TattooArtist @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 }

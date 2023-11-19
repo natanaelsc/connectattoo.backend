@@ -36,6 +36,7 @@ export class UserService {
       email,
       password,
       createUserDto.birthDate,
+      createUserDto.termsAccepted,
     );
     return createUser;
   }

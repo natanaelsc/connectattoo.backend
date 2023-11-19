@@ -7,6 +7,7 @@ export interface User {
   email: string;
   password: string;
   birthDate: string;
+  termsAccepted: boolean;
   isEmailConfirmed: boolean;
   address?: Address;
 }

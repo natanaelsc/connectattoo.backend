@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsEmail,
   IsNotEmpty,
@@ -26,4 +27,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsDateString({ strict: true })
   birthDate: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  termsAccepted: boolean;
 }
