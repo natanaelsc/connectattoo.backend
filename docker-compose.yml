@@ -1,61 +1,69 @@
 version: '3.8'
 
 services:
-  app:
-    container_name: app
-    build: .
+  api:
+    container_name: api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+      - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     restart: 'on-failure'
-    volumes:
-      - ./data/app:/root/app
     env_file:
       - .env
     ports:
-      - ${PORT}:${PORT}
+      - ${PORT:-3000}:${PORT:-3000}
     depends_on:
-      - postgres
-      - mongo
+      postgres:
+        condition: service_healthy
+      # - mongo
     links:
       - postgres
-      - mongo
+      # - mongo
     networks:
       - connectattoo
+    # entrypoint: sh -c "npm run migrate deploy"
 
   postgres:
     container_name: postgres
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - .env
-    volumes:
-      - postgres:/data/postgres
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     networks:
       - connectattoo
-
-  mongo:
-    container_name: mongo
-    image: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-      - MONGO_INITDB_DATABASE=connectattoo
-    env_file:
-      - .env
-    ports:
-      - ${MONGO_PORT:-27017}:27017
     volumes:
-      - mongo:/data/mongo
-    networks:
-      - connectattoo
+      - ./scripts/docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # mongo:
+  #   container_name: mongo
+  #   image: mongo
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+  #     - MONGO_INITDB_DATABASE=connectattoo
+  #   env_file:
+  #     - .env
+  #   ports:
+  # - ${MONGO_PORT:-27017}:27017
+  #   networks:
+  #     - connectattoo
 
 volumes:
   postgres:
-  mongo:
-
+  # mongo:
 
 networks:
   connectattoo:

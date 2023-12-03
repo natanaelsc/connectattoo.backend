@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
 import { CreateUser } from '../user/models/create-user';
 import { TattooArtist } from './tattoo-artist';
+import { PrismaService } from 'src/shared/adapters/prisma/prisma.service';
 
 @Injectable()
 export class TattooArtistRepository {
@@ -14,7 +14,7 @@ export class TattooArtistRepository {
         data: {
           ...createUser,
           address: {
-            create: createUser.address,
+            create: createUser.address as any, //temporary fix, refactor incoming
           },
         },
       })

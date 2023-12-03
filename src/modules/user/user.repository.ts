@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/shared/adapters/prisma/prisma.service';
 import { handleErrors } from 'src/shared/utils/handle-errors.util';
 import { Collection } from './enums/collection.enum';
 import { User } from './interfaces/user.interface';
