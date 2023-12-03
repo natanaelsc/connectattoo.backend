@@ -1,5 +1,5 @@
 export class UpdateUser {
-  readonly id: string;
+  readonly id: number;
   readonly email: string;
   readonly isEmailConfirmed: boolean;
 }
