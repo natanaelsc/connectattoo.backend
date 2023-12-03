@@ -36,10 +36,6 @@ USER node
 
 FROM node:18-alpine As production
 
-ARG POSTGRES_URL
-
-RUN echo ${POSTGRES_URL}
-
 WORKDIR /api
 COPY --chown=node:node --from=build /api/node_modules ./node_modules
 COPY --chown=node:node --from=build /api/dist ./dist
@@ -47,8 +43,6 @@ COPY --chown=node:node --from=build /api/prisma ./prisma
 COPY --chown=node:node --from=build /api/package*.json ./
 
 RUN apk update && apk add bash
-
-# CMD ["node", "dist/main.js"]
 
 #adicionar verificação de produção no migrate:deploy para deploys
 CMD ["/bin/bash", "-c", "npm run migrate:deploy;node dist/main.js"]
