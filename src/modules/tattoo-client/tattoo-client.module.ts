@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { TattooClientController } from './tattoo-client.controller';

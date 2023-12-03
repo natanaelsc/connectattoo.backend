@@ -1,4 +1,4 @@
-FROM node:18-alpine As development
+FROM node:18-alpine AS development
 
 WORKDIR /api
 
@@ -10,7 +10,7 @@ USER node
 
 #####################
 
-FROM node:18-alpine As build
+FROM node:18-alpine AS build
 
 WORKDIR /api
 
@@ -34,7 +34,7 @@ USER node
 
 #####################
 
-FROM node:18-alpine As production
+FROM node:18-alpine AS production
 
 WORKDIR /api
 COPY --chown=node:node --from=build /api/node_modules ./node_modules
