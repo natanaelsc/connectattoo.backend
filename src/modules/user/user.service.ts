@@ -1,53 +1,70 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { CreateUser } from './models/create-user';
-import { UserRepository } from './user.repository';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/shared/adapters/prisma/prisma.service';
+import { IUser } from './interfaces/user.interface';
+import { User } from '@prisma/client';
+import { IAddress } from 'src/modules/user/interfaces/address.interface';
+import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
+import { ITattooArtist } from './interfaces/tattoo-artist.interface';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private prismaService: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto): Promise<CreateUser> {
-    const email = createUserDto.email;
-    const emailAlreadyInUse = await this.userRepository.findByEmail(email);
-
-    if (emailAlreadyInUse !== null) {
-      throw new BadRequestException(`Usuário já cadastrado`);
-    }
-
-    const name = createUserDto.name.split(' ');
-    const firstName = name[0];
-    const lastName = name[1];
-
-    this.comparePasswords(
-      createUserDto.password,
-      createUserDto.passwordConfirmation,
-    );
-
-    const password = await bcrypt.hash(createUserDto.password, 10);
-
-    delete createUserDto.password;
-    delete createUserDto.passwordConfirmation;
-
-    const createUser = CreateUser.create(
-      firstName,
-      lastName,
-      email,
-      password,
-      createUserDto.birthDate,
-      createUserDto.termsAccepted,
-    );
-    return createUser;
+  async getUserByEmail(email: string): Promise<User | null> {
+    return await this.prismaService.user.findFirst({ where: { email } });
   }
 
-  private comparePasswords(
-    password: string,
-    passwordConfirmation: string,
-  ): boolean {
-    if (password !== passwordConfirmation) {
-      throw new BadRequestException('Senhas não conferem');
-    }
-    return true;
+  async createUser(userData: IUser): Promise<User> {
+    const user = await this.prismaService.user.findFirst({
+      where: { email: userData.email },
+    });
+
+    if (user) throw AuthBusinessExceptions.emailAlreadyRegisteredException();
+
+    return await this.prismaService.user.create({
+      data: userData,
+    });
+  }
+
+  async upgradeToArtist(userId: number, data: ITattooArtist) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+    });
+
+    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { tattooArtist: { create: data } },
+    });
+  }
+
+  async isArtist(userId: number): Promise<boolean> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: { tattooArtist: true },
+    });
+
+    return !!user!.tattooArtist;
+  }
+
+  async editAddress(userId: number, address: IAddress) { //revisar
+    return await this.prismaService.user.update({
+      where: { id: userId },
+      data: {
+        tattooArtist: {
+          create: {
+            address: { create: address },
+          },
+        },
+      },
+    });
+  }
+
+  async confirmUser(email: string): Promise<void> { //revisar
+    await this.prismaService.user.update({
+      where: { email },
+      data: { isEmailConfirmed: true },
+    });
   }
 }

@@ -1,9 +1,10 @@
-export interface Address {
-  id?: string;
+export interface IAddress {
   street: string;
   number: string;
   city: string;
   state: string;
   country: string;
   zipCode: string;
+  neighborhood: string;
+  complement?: string;
 }

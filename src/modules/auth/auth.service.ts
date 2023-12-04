@@ -1,50 +1,84 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { UserRepository } from '../user/user.repository';
+import { Injectable } from '@nestjs/common';
 import { UserLoginDto } from './dtos/user-login.dto';
-import { AccountType } from './enums/account-type.enum';
-import { Payload } from './interfaces/payload.interface';
-import { UserToken } from './interfaces/user-token.interface';
-import { JwtStrategy } from './strategies/jwt.strategy';
-
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtSignature } from './interfaces/jwt-signature.interface';
+import { AuthStrategy } from './strategies/auth.strategy';
+import { UserService } from '../user/user.service';
+import { IUser } from '../user/interfaces/user.interface';
+import { IRegisterUser } from './interfaces/register.interface';
+import { AuthUtil } from 'src/shared/utils/auth.util';
+import { MailerService } from '@nestjs-modules/mailer';
+import { MailStrategy } from './strategies/mail.strategy';
+import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly jwtStrategy: JwtStrategy,
+    private authStrategy: AuthStrategy,
+    private mailStrategy: MailStrategy,
+    private mailerService: MailerService,
+    private userService: UserService,
   ) {}
 
-  async login(userLoginDto: UserLoginDto): Promise<UserToken> {
-    const { email, password } = userLoginDto;
-    const payload = await this.validate(email, password);
-    delete userLoginDto.password;
-    const userToken = await this.jwtStrategy.getUserToken(payload);
-    return userToken;
+  async register(userData: IRegisterUser): Promise<IUser> {
+    const password = AuthUtil.hash(userData.password);
+
+    const signature = await this.mailStrategy.sign({
+      email: userData.email,
+    });
+
+    const createdUser = await this.userService.createUser({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      password,
+      accessToken: signature.accessToken,
+      birthDate: userData.birthDate,
+      termsAccepted: userData.termsAccepted,
+    });
+
+    // await this.mailerService.sendMail({
+    //   to: createdUser.email,
+    //   subject: 'Confirmação de Cadastro',
+    //   template: 'email-confirmation',
+    //   context: {
+    //     username: createdUser.firstName,
+    //     url: `${process.env.EMAIL_CONFIRMATION_URL}?token=${access_token}`,
+    //   },
+    // });
+
+    return createdUser;
   }
 
-  async validate(email: string, password: string): Promise<Payload> {
-    const user = await this.userRepository.findByEmail(email);
-    if (user === null) throw new UnauthorizedException('Credenciais inválidas');
-    if (user.isEmailConfirmed === false) {
-      throw new UnauthorizedException('Usuário não verificado');
+  async login(userLoginDto: UserLoginDto): Promise<JwtSignature> {
+    const user = await this.userService.getUserByEmail(userLoginDto.email);
+
+    if (!user || !AuthUtil.verify(userLoginDto.password, user.password))
+      throw AuthBusinessExceptions.invalidCredentialsException();
+
+    if (!user.isEmailConfirmed) {
+      throw AuthBusinessExceptions.emailNotVerifiedException();
     }
-    await this.checkPassword(password, user.password);
-    const payload: Payload = {
-      sub: user.id,
+
+    const payload: JwtPayload = {
+      userId: user.id,
+      uuid: user.uuid,
       email: user.email,
-      type: AccountType.CLIENT,
+      isArtist: await this.userService.isArtist(user.id),
     };
-    return payload;
+
+    return await this.authStrategy.sign(payload);
   }
 
-  private async checkPassword(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    const isPasswordMatching = await bcrypt.compare(password, hashedPassword);
-    if (isPasswordMatching === false)
-      throw new UnauthorizedException('Credenciais inválidas');
+  async confirmUser(token: string) {
+    const { email } = await this.mailStrategy.verify(token);
 
-    return isPasswordMatching;
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) throw AuthBusinessExceptions.emailNotFoundException();
+
+    if (user.isEmailConfirmed)
+      throw AuthBusinessExceptions.emailAlreadyVerifiedException();
+
+    return await this.userService.confirmUser(email);
   }
 }

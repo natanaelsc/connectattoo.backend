@@ -6,11 +6,16 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { IRegisterUser } from 'src/modules/auth/interfaces/register.interface';
 
-export class CreateUserDto {
+export class CreateUserDto implements IRegisterUser {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  firstName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  lastName: string;
 
   @IsNotEmpty()
   @IsEmail()
@@ -21,14 +26,14 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty()
-  @IsString()
-  passwordConfirmation: string;
-
-  @IsNotEmpty()
   @IsDateString({ strict: true })
   birthDate: string;
 
   @IsNotEmpty()
   @IsBoolean()
   termsAccepted: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  tattooArtist: boolean;
 }

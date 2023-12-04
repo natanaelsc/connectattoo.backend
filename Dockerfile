@@ -45,4 +45,5 @@ COPY --chown=node:node --from=build /api/package*.json ./
 RUN apk update && apk add bash
 
 #adicionar verificação de produção no migrate:deploy para deploys
-CMD ["/bin/bash", "-c", "npm run migrate:deploy;node dist/main.js"]
+CMD ["/bin/bash", "-c", "node dist/main.js"]
+# CMD ["/bin/bash", "-c", "npm run migrate:deploy;node dist/main.js"]

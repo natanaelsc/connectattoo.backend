@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "commit": "git-cz",
     "compose:up": "docker compose -f docker-compose.yml -p connectattoo up --build -d",
-    "compose:down": "docker compose -f docker-compose.dev.yml -p connectattoo down --remove-orphans --volumes && docker compose rm -fsv",
+    "compose:down": "docker compose -f docker-compose.yml -p connectattoo down --remove-orphans --volumes && docker compose rm -fsv",
     "migrate:deploy": "prisma migrate deploy",
     "prisma:db": "npx prisma db push",
     "prisma:studio": "npx prisma studio --port 5555 --browser none"
@@ -34,7 +34,6 @@
     "@nestjs/mapped-types": "^2.0.4",
     "@nestjs/platform-express": "^10.2.10",
     "@prisma/client": "^5.6.0",
-    "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cors": "^2.8.5",
@@ -49,7 +48,6 @@
   "devDependencies": {
     "@nestjs/schematics": "^10.0.3",
     "@nestjs/testing": "^10.2.10",
-    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.10",
     "@types/node": "^20.10.2",

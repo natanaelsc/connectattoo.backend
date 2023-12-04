@@ -17,8 +17,9 @@ services:
     ports:
       - ${PORT:-3000}:${PORT:-3000}
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+      # postgres:
+        # condition: service_healthy
       # - mongo
     links:
       - postgres
@@ -39,13 +40,13 @@ services:
       - ${POSTGRES_PORT:-5432}:5432
     networks:
       - connectattoo
-    volumes:
-      - ./scripts/docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # volumes:
+    #   - ./scripts/docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
 
   # mongo:
   #   container_name: mongo

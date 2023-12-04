@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsPostalCode, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsPostalCode, IsString } from 'class-validator';
+import { IAddress } from '../interfaces/address.interface';
 
-export class CreateAddressDto {
+export class CreateAddressDto implements IAddress {
   @IsNotEmpty()
   @IsString()
   street: string;
@@ -24,4 +25,12 @@ export class CreateAddressDto {
   @IsNotEmpty()
   @IsPostalCode('BR')
   zipCode: string;
+
+  @IsNotEmpty()
+  @IsString()
+  neighborhood: string;
+
+  @IsOptional()
+  @IsString()
+  complement?: string;
 }
