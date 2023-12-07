@@ -5,5 +5,5 @@ export interface IRegisterUser{
   password: string;
   birthDate: string;
   termsAccepted: boolean;
-  tattooArtist: boolean;
+  tattooArtist?: boolean;
 }

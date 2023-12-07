@@ -9,8 +9,7 @@ datasource db {
 }
 
 model User {
-  id               Int           @id @default(autoincrement())
-  uuid             String        @unique @default(uuid())
+  id               String        @id @default(uuid())
   firstName        String
   lastName         String
   email            String        @unique
@@ -18,7 +17,6 @@ model User {
   birthDate        String
   termsAccepted    Boolean       @default(false)
   isEmailConfirmed Boolean       @default(false)
-  accessToken      String
   tattooArtist     TattooArtist?
   tattooArtistId   Int?
   createdAt        DateTime      @default(now())
@@ -26,26 +24,24 @@ model User {
 }
 
 model TattooArtist {
-  id        Int                  @id @default(autoincrement())
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
-  address   TattooArtistAddress?
-  user      User                 @relation(fields: [userId], references: [id])
-  userId    Int                  @unique
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  address   Address?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
 }
 
-model TattooArtistAddress {
-  id             Int          @id @default(autoincrement())
+model Address {
+  id             String       @id @default(uuid())
   street         String
   number         String
   city           String
   state          String
-  neighborhood   String
   country        String       @default("Brazil")
   zipCode        String
-  complement     String?
   tattooArtist   TattooArtist @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
-  tattooArtistId Int          @unique
+  tattooArtistId String       @unique
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }

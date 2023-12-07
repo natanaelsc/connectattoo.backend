@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Post('/register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto): Promise<JwtSignature> {
     return await this.authService.register(createUserDto);
   }
 }

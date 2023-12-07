@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
@@ -33,7 +34,7 @@ export class CreateUserDto implements IRegisterUser {
   @IsBoolean()
   termsAccepted: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   tattooArtist: boolean;
 }

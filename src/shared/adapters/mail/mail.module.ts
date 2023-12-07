@@ -6,6 +6,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
   imports: [
     MailerModule.forRoot({
       transport: {
+        service: 'gmail',
         host: process.env.MAILDEV_HOST,
         secure: true,
         port: Number(process.env.MAILDEV_PORT),
@@ -18,7 +19,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
       defaults: { from: `"Connectattoo" <${process.env.MAILDEV_FROM}>` },
       template: {
         dir: __dirname + '/templates',
-        adapter: new HandlebarsAdapter(), // or new PugAdapter()
+        adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
         },
@@ -27,4 +28,4 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
   ],
   exports: [MailerModule],
 })
-export class MailModule {} //novu/sendgrid
+export class MailModule {}

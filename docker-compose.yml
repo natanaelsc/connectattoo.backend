@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     container_name: api
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
       args:
@@ -17,16 +17,13 @@ services:
     ports:
       - ${PORT:-3000}:${PORT:-3000}
     depends_on:
-      - postgres
-      # postgres:
-        # condition: service_healthy
-      # - mongo
+      postgres:
+        condition: service_healthy
     links:
       - postgres
-      # - mongo
+      - mongo
     networks:
       - connectattoo
-    # entrypoint: sh -c "npm run migrate deploy"
 
   postgres:
     container_name: postgres
@@ -40,31 +37,31 @@ services:
       - ${POSTGRES_PORT:-5432}:5432
     networks:
       - connectattoo
-    # volumes:
-    #   - ./scripts/docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
-    # healthcheck:
-    #   test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
+    volumes:
+      - ./scripts/docker/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # mongo:
-  #   container_name: mongo
-  #   image: mongo
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
-  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-  #     - MONGO_INITDB_DATABASE=connectattoo
-  #   env_file:
-  #     - .env
-  #   ports:
-  # - ${MONGO_PORT:-27017}:27017
-  #   networks:
-  #     - connectattoo
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGO_INITDB_DATABASE=connectattoo
+    env_file:
+      - .env
+    ports:
+      - ${MONGO_PORT:-27017}:27017
+    networks:
+      - connectattoo
 
 volumes:
   postgres:
-  # mongo:
+  mongo:
 
 networks:
   connectattoo:
