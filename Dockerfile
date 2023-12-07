@@ -6,6 +6,8 @@ COPY --chown=node:node package*.json ./
 
 RUN npm ci
 
+USER node
+
 #####################
 
 FROM node:18-alpine AS build
@@ -28,11 +30,11 @@ ENV NODE_ENV production
 
 RUN npm ci --only=production && npm cache clean --force
 
+USER node
+
 #####################
 
 FROM node:18-alpine AS production
-
-USER node
 
 WORKDIR /api
 COPY --chown=node:node --from=build /api/node_modules ./node_modules
