@@ -1,33 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/adapters/prisma/prisma.service';
 import { IUser } from './interfaces/user.interface';
 import { User } from '@prisma/client';
 import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private userRepository: UserRepository) {}
 
   async getUserByEmail(email: string): Promise<User | null> {
-    return await this.prismaService.user.findFirst({ where: { email } });
+    return await this.userRepository.getUserByEmail(email);
   }
 
   async createUser(userData: IUser): Promise<User> {
-    const user = await this.prismaService.user.findFirst({
-      where: { email: userData.email },
-    });
+    const user = await this.userRepository.getUserByEmail(userData.email);
 
     if (user) throw AuthBusinessExceptions.emailAlreadyRegisteredException();
 
-    return await this.prismaService.user.create({
-      data: userData,
-    });
+    return await this.userRepository.create(userData);
   }
 
   async confirmUser(email: string): Promise<void> {
-    await this.prismaService.user.update({
-      where: { email },
-      data: { isEmailConfirmed: true },
-    });
+    await this.userRepository.update({ email }, { isEmailConfirmed: true });
   }
 }
