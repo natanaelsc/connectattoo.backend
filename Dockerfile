@@ -42,4 +42,4 @@ COPY --chown=node:node --from=build /api/dist ./dist
 COPY --chown=node:node --from=build /api/prisma ./prisma
 COPY --chown=node:node --from=build /api/package*.json ./
 
-CMD ["/bin/sh", "-c", "npm run migrate:deploy;node dist/main.js"]
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/main.js"]

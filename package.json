@@ -18,8 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "commit": "git-cz",
-    "migrate:deploy": "prisma migrate deploy"
+    "commit": "git-cz"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.9.1",
@@ -36,7 +35,6 @@
     "dotenv": "^16.3.1",
     "hbs": "^4.2.0",
     "nodemailer": "^6.9.7",
-    "prisma": "^5.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1"
