@@ -3,6 +3,7 @@ import { IUser } from './interfaces/user.interface';
 import { User } from '@prisma/client';
 import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
 import { UserRepository } from './user.repository';
+import { IAddress } from './interfaces/address.interface';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,10 @@ export class UserService {
     if (user) throw AuthBusinessExceptions.emailAlreadyRegisteredException();
 
     return await this.userRepository.create(userData);
+  }
+
+  async createArtist(userId: string, address: IAddress): Promise<void> {
+    await this.userRepository.createArtist(userId, address);
   }
 
   async confirmUser(email: string): Promise<void> {

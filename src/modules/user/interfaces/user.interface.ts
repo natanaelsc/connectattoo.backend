@@ -1,5 +1,3 @@
-import { IAddress } from './address.interface';
-
 export interface IUser {
   id?: string;
   firstName: string;
@@ -9,5 +7,4 @@ export interface IUser {
   birthDate: string;
   termsAccepted: boolean;
   isEmailConfirmed?: boolean;
-  address?: IAddress;
 }

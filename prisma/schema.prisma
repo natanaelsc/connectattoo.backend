@@ -17,8 +17,8 @@ model User {
   birthDate        String
   termsAccepted    Boolean       @default(false)
   isEmailConfirmed Boolean       @default(false)
-  tattooArtist     TattooArtist?
-  tattooArtistId   Int?
+  tattooArtist     TattooArtist? @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
+  tattooArtistId   String?       @unique
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 }
@@ -27,21 +27,20 @@ model TattooArtist {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  address   Address?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  addressId String?  @unique
+  user      User?
 }
 
 model Address {
-  id             String       @id @default(uuid())
-  street         String
-  number         String
-  city           String
-  state          String
-  country        String       @default("Brazil")
-  zipCode        String
-  tattooArtist   TattooArtist @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
-  tattooArtistId String       @unique
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id           String        @id @default(uuid())
+  street       String
+  number       String
+  city         String
+  state        String
+  country      String        @default("Brazil")
+  zipCode      String
+  tattooArtist TattooArtist?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }

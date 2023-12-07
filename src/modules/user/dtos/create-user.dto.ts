@@ -3,13 +3,12 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { IRegisterUser } from 'src/modules/auth/interfaces/register.interface';
+import { IRegisterUser } from 'src/modules/auth/interfaces/register-user.interface';
 
-export class CreateUserDto implements IRegisterUser {
+export class RegisterUserDto implements IRegisterUser {
   @IsNotEmpty()
   @IsString()
   firstName: string;
@@ -33,8 +32,4 @@ export class CreateUserDto implements IRegisterUser {
   @IsNotEmpty()
   @IsBoolean()
   termsAccepted: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  tattooArtist: boolean;
 }

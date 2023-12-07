@@ -8,7 +8,7 @@ CREATE TABLE "User" (
     "birthDate" TEXT NOT NULL,
     "termsAccepted" BOOLEAN NOT NULL DEFAULT false,
     "isEmailConfirmed" BOOLEAN NOT NULL DEFAULT false,
-    "tattooArtistId" INTEGER,
+    "tattooArtistId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -20,7 +20,7 @@ CREATE TABLE "TattooArtist" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" TEXT NOT NULL,
+    "addressId" TEXT,
 
     CONSTRAINT "TattooArtist_pkey" PRIMARY KEY ("id")
 );
@@ -34,7 +34,6 @@ CREATE TABLE "Address" (
     "state" TEXT NOT NULL,
     "country" TEXT NOT NULL DEFAULT 'Brazil',
     "zipCode" TEXT NOT NULL,
-    "tattooArtistId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -45,13 +44,13 @@ CREATE TABLE "Address" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TattooArtist_userId_key" ON "TattooArtist"("userId");
+CREATE UNIQUE INDEX "User_tattooArtistId_key" ON "User"("tattooArtistId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Address_tattooArtistId_key" ON "Address"("tattooArtistId");
+CREATE UNIQUE INDEX "TattooArtist_addressId_key" ON "TattooArtist"("addressId");
 
 -- AddForeignKey
-ALTER TABLE "TattooArtist" ADD CONSTRAINT "TattooArtist_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_tattooArtistId_fkey" FOREIGN KEY ("tattooArtistId") REFERENCES "TattooArtist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_tattooArtistId_fkey" FOREIGN KEY ("tattooArtistId") REFERENCES "TattooArtist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TattooArtist" ADD CONSTRAINT "TattooArtist_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("id") ON DELETE CASCADE ON UPDATE CASCADE;

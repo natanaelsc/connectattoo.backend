@@ -10,7 +10,8 @@ import {
 import { AuthService } from './auth.service';
 import { UserLoginDto } from './dtos/user-login.dto';
 import { JwtSignature } from './interfaces/jwt-signature.interface';
-import { CreateUserDto } from '../user/dtos/create-user.dto';
+import { RegisterUserDto } from '../user/dtos/create-user.dto';
+import { RegisterTattooArtistDto } from '../user/dtos/create-artist.dto';
 
 @Controller('/auth')
 export class AuthController {
@@ -28,7 +29,16 @@ export class AuthController {
   }
 
   @Post('/register')
-  async register(@Body() createUserDto: CreateUserDto): Promise<JwtSignature> {
-    return await this.authService.register(createUserDto);
+  async registerUser(
+    @Body() createUserDto: RegisterUserDto,
+  ): Promise<JwtSignature> {
+    return await this.authService.registerUser(createUserDto);
+  }
+
+  @Post('/register/artist')
+  async registerArtist(
+    @Body() createUserDto: RegisterTattooArtistDto,
+  ): Promise<JwtSignature> {
+    return await this.authService.registerArtist(createUserDto);
   }
 }

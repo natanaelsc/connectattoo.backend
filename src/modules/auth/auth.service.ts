@@ -3,47 +3,34 @@ import { UserLoginDto } from './dtos/user-login.dto';
 import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
 import { JwtSignature } from './interfaces/jwt-signature.interface';
 import { UserService } from '../user/user.service';
-import { IRegisterUser } from './interfaces/register.interface';
+import { IRegisterUser } from './interfaces/register-user.interface';
 import { HashUtil } from 'src/shared/utils/hash.util';
-import { MailerService } from '@nestjs-modules/mailer';
 import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
 import { JwtStrategies } from './jwt.strategies';
+import { IUser } from '../user/interfaces/user.interface';
+import { MailService } from '~/shared/adapters/mail/mail.service';
+import { IRegisterArtist } from './interfaces/register-artist.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtStrategies: JwtStrategies,
-    private mailerService: MailerService,
+    private mailService: MailService,
     private userService: UserService,
   ) {}
 
-  async register(userData: IRegisterUser): Promise<JwtSignature> {
-    const password = HashUtil.hash(userData.password);
+  async registerUser(userData: IRegisterUser): Promise<JwtSignature> {
+    const createdUser = await this.createUser(userData);
 
-    const { accessToken } = await this.jwtStrategies.mail.sign({
-      email: userData.email,
-    });
+    return { accessToken: createdUser.accessToken };
+  }
 
-    const createdUser = await this.userService.createUser({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      password,
-      birthDate: userData.birthDate,
-      termsAccepted: userData.termsAccepted,
-    });
+  async registerArtist(artistData: IRegisterArtist) {
+    const createdUser = await this.createUser(artistData);
 
-    await this.mailerService.sendMail({
-      to: createdUser.email,
-      subject: 'Confirmação de Cadastro',
-      template: 'email-confirmation',
-      context: {
-        username: createdUser.firstName,
-        url: `${process.env.EMAIL_CONFIRMATION_URL}?token=${accessToken}`,
-      },
-    });
+    await this.userService.createArtist(createdUser.id, artistData.address);
 
-    return { accessToken };
+    return { accessToken: createdUser.accessToken };
   }
 
   async login(userLoginDto: UserLoginDto): Promise<JwtSignature> {
@@ -83,5 +70,32 @@ export class AuthService {
       throw AuthBusinessExceptions.emailAlreadyVerifiedException();
 
     await this.userService.confirmUser(email);
+  }
+
+  private async createUser(
+    userData: IRegisterUser,
+  ): Promise<JwtSignature & Required<IUser>> {
+    const password = HashUtil.hash(userData.password);
+
+    const { accessToken } = await this.jwtStrategies.mail.sign({
+      email: userData.email,
+    });
+
+    const createdUser = await this.userService.createUser({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      password,
+      birthDate: userData.birthDate,
+      termsAccepted: userData.termsAccepted,
+    });
+
+    await this.mailService.sendConfirmationEmail(
+      createdUser.email,
+      createdUser.firstName,
+      accessToken,
+    );
+
+    return { ...createdUser, accessToken };
   }
 }
