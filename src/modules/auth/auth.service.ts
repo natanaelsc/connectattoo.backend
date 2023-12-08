@@ -81,9 +81,13 @@ export class AuthService {
       email: userData.email,
     });
 
+    const name = userData.name.split(' ');
+    const firstName = name[0];
+    const lastName = name[1];
+
     const createdUser = await this.userService.createUser({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
+      firstName,
+      lastName,
       email: userData.email,
       password,
       birthDate: userData.birthDate,

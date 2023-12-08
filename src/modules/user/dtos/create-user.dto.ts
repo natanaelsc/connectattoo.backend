@@ -11,11 +11,7 @@ import { IRegisterUser } from 'src/modules/auth/interfaces/register-user.interfa
 export class RegisterUserDto implements IRegisterUser {
   @IsNotEmpty()
   @IsString()
-  firstName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  lastName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsEmail()

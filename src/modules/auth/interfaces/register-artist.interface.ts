@@ -1,8 +1,7 @@
 import { IAddress } from '~/modules/user/interfaces/address.interface';
 
 export interface IRegisterArtist {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   birthDate: string;
