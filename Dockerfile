@@ -14,7 +14,7 @@ FROM node:18-alpine AS build
 
 WORKDIR /api
 
-COPY --chown=node:node --from=dependencies /api/node_modules ./node_modules
+COPY --chown=node:node --from=development /api/node_modules ./node_modules
 
 COPY --chown=node:node tsconfig.json package*.json nest-cli.json ./
 
