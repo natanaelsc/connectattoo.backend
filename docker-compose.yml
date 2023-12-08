@@ -50,4 +50,5 @@ volumes:
 
 networks:
   connectattoo:
+    name: connectattoo
     driver: bridge
