@@ -9,7 +9,7 @@ services:
       args:
         - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     restart: 'on-failure'
     env_file:
