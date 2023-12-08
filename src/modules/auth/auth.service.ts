@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { HashUtil } from 'src/shared/utils/hash.util';
+import { MailService } from '~/shared/adapters/mail/mail.service';
+import { IUser } from '../user/interfaces/user.interface';
+import { UserService } from '../user/user.service';
 import { UserLoginDto } from './dtos/user-login.dto';
+import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
 import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
 import { JwtSignature } from './interfaces/jwt-signature.interface';
-import { UserService } from '../user/user.service';
-import { IRegisterUser } from './interfaces/register-user.interface';
-import { HashUtil } from 'src/shared/utils/hash.util';
-import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
-import { JwtStrategies } from './jwt.strategies';
-import { IUser } from '../user/interfaces/user.interface';
-import { MailService } from '~/shared/adapters/mail/mail.service';
 import { IRegisterArtist } from './interfaces/register-artist.interface';
+import { IRegisterUser } from './interfaces/register-user.interface';
+import { JwtStrategies } from './jwt.strategies';
 
 @Injectable()
 export class AuthService {
@@ -81,13 +81,11 @@ export class AuthService {
       email: userData.email,
     });
 
-    const name = userData.name.split(' ');
-    const firstName = name[0];
-    const lastName = name[1];
+    const [firstName, ...lastName] = userData.name.split(' ');
 
     const createdUser = await this.userService.createUser({
       firstName,
-      lastName,
+      lastName: lastName.join(' '),
       email: userData.email,
       password,
       birthDate: userData.birthDate,
