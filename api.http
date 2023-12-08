@@ -50,7 +50,7 @@ Content-Type: {{contentType}}
 }
 
 ### Confirm Email
-GET  {{host}}/email/confirmation?token={{token}}
+GET  {{host}}/auth/confirm?token={{token}}
 
 ### Authenticate User
 # @name UserToken
