@@ -17,6 +17,7 @@ services:
       - .env
     ports:
       - ${PORT:-3000}:${PORT:-3000}
+      - 5555:5555
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,8 +55,20 @@ services:
       timeout: 5s
       retries: 5
 
+  cloudbeaver:
+    container_name: dbeaver
+    image: dbeaver/cloudbeaver
+    restart: unless-stopped
+    ports:
+       - 8978:8978
+    networks:
+      - connectattoo
+    volumes:
+      - connectattoo:/opt/cloudbeaver/workspace
+
 volumes:
-  postgres:
+  connectattoo:
+    name: connectattoo
 
 networks:
   connectattoo:
