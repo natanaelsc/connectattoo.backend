@@ -24,6 +24,15 @@ services:
       - postgres
     networks:
       - connectattoo
+    volumes:
+      - .:/api
+      - /api/node_modules
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npx prisma migrate dev
+        npm run start:dev
 
   postgres:
     container_name: postgres

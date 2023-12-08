@@ -2,9 +2,13 @@ FROM node:18-alpine AS development
 
 WORKDIR /api
 
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node ./package*.json ./
 
-RUN npm ci
+RUN npm install
+
+COPY --chown=node:node . .
+
+RUN npx prisma generate
 
 USER node
 
