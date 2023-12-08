@@ -12,8 +12,9 @@ async function bootstrap() {
   app.enableShutdownHooks();
   app.enableVersioning({
     type: VersioningType.URI,
+    defaultVersion: '1',
+    prefix: 'api/v',
   });
-  app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT ?? 3000);
 }
