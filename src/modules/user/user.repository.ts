@@ -1,37 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/adapters/prisma/prisma.service';
-import { handleErrors } from 'src/shared/utils/handle-errors.util';
-import { Collection } from './enums/collection.enum';
-import { User } from './interfaces/user.interface';
-import { UpdateUser } from './models/update-user';
+import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
+import { IUser } from './interfaces/user.interface';
+import { Prisma, User } from '@prisma/client';
+import { IAddress } from './interfaces/address.interface';
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {}
 
-  async findByEmail(email: string): Promise<User> {
-    let user: User;
-    for (const collection of Object.values(Collection)) {
-      user = await this.prisma[collection]
-        .findUnique({ where: { email } })
-        .catch(() => null);
-      if (user != null) break;
-    }
-    return user;
+  async getUserByEmail(email: string): Promise<User | null> {
+    return await this.prismaService.user.findUnique({ where: { email } });
   }
 
-  async update(updateUser: UpdateUser): Promise<User> {
-    const { id, email, isEmailConfirmed } = updateUser;
-    let user: User;
-    for (const collection of Object.values(Collection)) {
-      user = await this.prisma[collection]
-        .update({
-          where: { id, email },
-          data: { isEmailConfirmed },
-        })
-        .catch((error) => handleErrors(error));
-      if (user != null) break;
-    }
-    return user;
+  async create(data: IUser): Promise<User> {
+    return await this.prismaService.user.create({ data });
+  }
+
+  async update(
+    where: Prisma.UserWhereUniqueInput,
+    data: Prisma.UserUpdateInput,
+  ): Promise<User> {
+    return await this.prismaService.user.update({ where, data });
+  }
+
+  async createArtist(userId: string, address: IAddress): Promise<void> {
+    await this.prismaService.tattooArtist.create({
+      data: { user: { connect: { id: userId } }, address: { create: address } },
+    });
   }
 }

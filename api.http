@@ -15,7 +15,7 @@
 
 ### Create User Client
 # @name UserToken
-POST {{host}}/users/client
+POST {{host}}/auth/register
 Content-Type: {{contentType}}
 
 {
@@ -29,7 +29,7 @@ Content-Type: {{contentType}}
 
 ### Create User Artist
 # @name UserToken
-POST {{host}}/users/artist
+POST {{host}}/auth/register/artist
 Content-Type: {{contentType}}
 
 {
@@ -50,7 +50,7 @@ Content-Type: {{contentType}}
 }
 
 ### Confirm Email
-GET  {{host}}/email/confirmation?token={{token}}
+GET  {{host}}/auth/confirm?token={{token}}
 
 ### Authenticate User
 # @name UserToken

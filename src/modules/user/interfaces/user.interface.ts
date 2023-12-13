@@ -1,13 +1,10 @@
-import { Address } from './address.interface';
-
-export interface User {
-  id: number;
+export interface IUser {
+  id?: string;
   firstName: string;
   lastName: string;
-  email: string;
   password: string;
+  email: string;
   birthDate: string;
   termsAccepted: boolean;
-  isEmailConfirmed: boolean;
-  address?: Address;
+  isEmailConfirmed?: boolean;
 }

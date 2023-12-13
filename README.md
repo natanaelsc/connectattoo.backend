@@ -2,38 +2,49 @@
 
 ## Descrição
 
-Este repositório contém todo o código para o backend do projeto Connectattoo. O projeto foi desenvolvido utilizando o framework NestJS, que é baseado em NodeJS e Typescript. O banco de dados utilizado é o MongoDB.
-
-## Instalando Dependências
-
-```bash
-npm install
-```
+Este repositório contém todo o código para o backend do projeto Connectattoo. O projeto foi desenvolvido utilizando o framework NestJS, que é baseado em NodeJS e Typescript. O banco de dados utilizado é o PostgreSQL.
 
 ## Executando Projeto
 
-Antes de executar o servidor, é necessário criar um arquivo .env na raiz do projeto baseado no arquivo [.env.example](.env.example) e instalar o [Docker Desktop](https://www.docker.com/products/docker-desktop).
+Antes de executar a api, é necessário criar um arquivo .env na raiz do projeto baseado no arquivo [.env.example](.env.example) e instalar o [Docker Desktop](https://www.docker.com/products/docker-desktop).
 
-Após isso, execute o comando abaixo para inicializar o banco de dados:
-
-```bash
-# Inicializando o banco de dados em container Docker
-$ npm run compose:up
-```
-
-Voce pode acessar a interface do Mongo Express em: <http://localhost:8081>. As credenciais de acesso são as mesmas definidas no arquivo .env.
-
-Se estiver utilizando o VSCode pode ser instalada a extensão do MongoDB para visualizar os dados do banco de dados.
-
-Execute um dos comandos abaixo para rodar o servidor:
+Execute o comando para subir os serviços:
 
 ```bash
-# Inicializando o servidor
-$ npm run start
-
-# Inicializando o servidor em modo de desenvolvimento
-$ npm run start:dev
+docker compose up -d
 ```
+
+Execute o comando para parar os serviços e remover rastros:
+
+```bash
+docker compose down --remove-orphans --volumes --rmi local
+```
+
+## Executando Projeto (Desenvolvimento)
+
+Execute o comando para subir os serviços:
+
+```bash
+docker compose -f docker-compose.dev.yml up
+```
+
+Recomendo não utilizar `-d` para que você possa ver os logs dos serviços.
+
+Mas caso queira, execute o comando para ver os logs:
+
+```bash
+docker compose -f docker-compose.dev.yml logs -f
+```
+
+Execute o comando para parar os serviços e remover rastros:
+
+```bash
+docker compose -f docker-compose.dev.yml down --remove-orphans --volumes --rmi local
+```
+
+A porta padrão da API é a 3000.
+
+Voce pode acessar o BDeaver em: <http://localhost:8978>.
 
 ## Executando testes
 

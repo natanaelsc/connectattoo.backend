@@ -3,18 +3,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { MailModule } from '~/shared/adapters/mail/mail.module';
+import { JwtStrategies } from './jwt.strategies';
 
 @Module({
-  imports: [
-    UserModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
-    }),
-  ],
-  providers: [AuthService, JwtStrategy],
+  imports: [UserModule, JwtModule, MailModule],
   controllers: [AuthController],
-  exports: [JwtStrategy],
+  providers: [AuthService, JwtStrategies],
+  exports: [JwtStrategies],
 })
 export class AuthModule {}

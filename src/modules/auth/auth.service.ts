@@ -1,50 +1,103 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { UserRepository } from '../user/user.repository';
+import { Injectable } from '@nestjs/common';
+import { HashUtil } from 'src/shared/utils/hash.util';
+import { MailService } from '~/shared/adapters/mail/mail.service';
+import { IUser } from '../user/interfaces/user.interface';
+import { UserService } from '../user/user.service';
 import { UserLoginDto } from './dtos/user-login.dto';
-import { AccountType } from './enums/account-type.enum';
-import { Payload } from './interfaces/payload.interface';
-import { UserToken } from './interfaces/user-token.interface';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
+import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
+import { JwtSignature } from './interfaces/jwt-signature.interface';
+import { IRegisterArtist } from './interfaces/register-artist.interface';
+import { IRegisterUser } from './interfaces/register-user.interface';
+import { JwtStrategies } from './jwt.strategies';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly jwtStrategy: JwtStrategy,
+    private jwtStrategies: JwtStrategies,
+    private mailService: MailService,
+    private userService: UserService,
   ) {}
 
-  async login(userLoginDto: UserLoginDto): Promise<UserToken> {
-    const { email, password } = userLoginDto;
-    const payload = await this.validate(email, password);
-    delete userLoginDto.password;
-    const userToken = await this.jwtStrategy.getUserToken(payload);
-    return userToken;
+  async registerUser(userData: IRegisterUser): Promise<JwtSignature> {
+    const createdUser = await this.createUser(userData);
+
+    return { accessToken: createdUser.accessToken };
   }
 
-  async validate(email: string, password: string): Promise<Payload> {
-    const user = await this.userRepository.findByEmail(email);
-    if (user === null) throw new UnauthorizedException('Credenciais inválidas');
-    if (user.isEmailConfirmed === false) {
-      throw new UnauthorizedException('Usuário não verificado');
+  async registerArtist(artistData: IRegisterArtist) {
+    const createdUser = await this.createUser(artistData);
+
+    await this.userService.createArtist(createdUser.id, artistData.address);
+
+    return { accessToken: createdUser.accessToken };
+  }
+
+  async login(userLoginDto: UserLoginDto): Promise<JwtSignature> {
+    const user = await this.userService.getUserByEmail(userLoginDto.email);
+
+    if (!user) throw AuthBusinessExceptions.invalidCredentialsException();
+
+    const isValidPassword = HashUtil.verify(
+      userLoginDto.password,
+      user.password,
+    );
+
+    if (!isValidPassword)
+      throw AuthBusinessExceptions.invalidCredentialsException();
+
+    if (!user.isEmailConfirmed) {
+      throw AuthBusinessExceptions.emailNotVerifiedException();
     }
-    await this.checkPassword(password, user.password);
-    const payload: Payload = {
-      sub: user.id,
+
+    const payload: JwtAuthPayload = {
+      userId: user.id,
       email: user.email,
-      type: AccountType.CLIENT,
+      isArtist: !!user.tattooArtistId,
     };
-    return payload;
+
+    return await this.jwtStrategies.auth.sign(payload);
   }
 
-  private async checkPassword(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    const isPasswordMatching = await bcrypt.compare(password, hashedPassword);
-    if (isPasswordMatching === false)
-      throw new UnauthorizedException('Credenciais inválidas');
+  async confirmUser(token: string): Promise<void> {
+    const { email } = await this.jwtStrategies.mail.verify(token);
 
-    return isPasswordMatching;
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) throw AuthBusinessExceptions.emailNotFoundException();
+
+    if (user.isEmailConfirmed)
+      throw AuthBusinessExceptions.emailAlreadyVerifiedException();
+
+    await this.userService.confirmUser(email);
+  }
+
+  private async createUser(
+    userData: IRegisterUser,
+  ): Promise<JwtSignature & Required<IUser>> {
+    const password = HashUtil.hash(userData.password);
+
+    const { accessToken } = await this.jwtStrategies.mail.sign({
+      email: userData.email,
+    });
+
+    const [firstName, ...lastName] = userData.name.split(' ');
+
+    const createdUser = await this.userService.createUser({
+      firstName,
+      lastName: lastName.join(' '),
+      email: userData.email,
+      password,
+      birthDate: userData.birthDate,
+      termsAccepted: userData.termsAccepted,
+    });
+
+    await this.mailService.sendConfirmationEmail(
+      createdUser.email,
+      createdUser.firstName,
+      accessToken,
+    );
+
+    return { ...createdUser, accessToken };
   }
 }

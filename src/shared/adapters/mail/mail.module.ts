@@ -1,18 +1,13 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Global, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { EmailConfirmationController } from './email-confirmation/email-confirmation.controller';
-import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
+import { Module } from '@nestjs/common';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from './mail.service';
-import { UserModule } from '../user/user.module';
 
-@Global()
 @Module({
   imports: [
-    UserModule,
-    JwtModule,
     MailerModule.forRoot({
       transport: {
+        service: 'gmail',
         host: process.env.MAILDEV_HOST,
         secure: true,
         port: Number(process.env.MAILDEV_PORT),
@@ -22,10 +17,17 @@ import { UserModule } from '../user/user.module';
         },
         ignoreTLS: true,
       },
+      defaults: { from: `"Connectattoo" <${process.env.MAILDEV_FROM}>` },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
   ],
-  controllers: [EmailConfirmationController],
-  providers: [MailService, EmailConfirmationService],
+  providers: [MailService],
   exports: [MailService],
 })
 export class MailModule {}

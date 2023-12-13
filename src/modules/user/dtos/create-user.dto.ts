@@ -6,8 +6,9 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { IRegisterUser } from 'src/modules/auth/interfaces/register-user.interface';
 
-export class CreateUserDto {
+export class RegisterUserDto implements IRegisterUser {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -19,10 +20,6 @@ export class CreateUserDto {
   @IsString()
   @IsStrongPassword()
   password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  passwordConfirmation: string;
 
   @IsNotEmpty()
   @IsDateString({ strict: true })

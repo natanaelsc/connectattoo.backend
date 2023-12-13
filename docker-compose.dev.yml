@@ -6,17 +6,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
+      target: development
       args:
         - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     restart: 'on-failure'
     env_file:
       - .env
     ports:
       - ${PORT:-3000}:${PORT:-3000}
+      - 5555:5555
     depends_on:
       postgres:
         condition: service_healthy
@@ -24,6 +25,15 @@ services:
       - postgres
     networks:
       - connectattoo
+    volumes:
+      - .:/api
+      - /api/node_modules
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npx prisma migrate dev
+        npm run start:dev
 
   postgres:
     container_name: postgres
@@ -44,6 +54,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  cloudbeaver:
+    container_name: dbeaver
+    image: dbeaver/cloudbeaver
+    restart: unless-stopped
+    ports:
+       - 8978:8978
+    networks:
+      - connectattoo
+    volumes:
+      - connectattoo:/opt/cloudbeaver/workspace
 
 volumes:
   connectattoo:
