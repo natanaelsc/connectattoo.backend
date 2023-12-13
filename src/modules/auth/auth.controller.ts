@@ -18,6 +18,7 @@ import { Public } from '~/shared/constants/public.constant';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Get('/confirm')
   async confirmEmail(@Query('token') token: string): Promise<void> {
     await this.authService.confirmUser(token);
