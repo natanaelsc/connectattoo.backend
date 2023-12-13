@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService, JwtSignOptions, JwtVerifyOptions } from '@nestjs/jwt';
 import { JwtMailPayload } from './interfaces/jwt-mail-payload.interface';
 import { JwtSignature } from './interfaces/jwt-signature.interface';
@@ -9,9 +9,9 @@ import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
 export class JwtStrategies implements JwtStrategiesImplementation.Interface {
   constructor(private jwtService: JwtService) {}
 
-  auth = this.configureAuthStrategy();
+  public auth = this.configureAuthStrategy();
 
-  mail = this.configureMailStrategy();
+  public mail = this.configureMailStrategy();
 
   private configureAuthStrategy() {
     return this.configureJwtStrategies<JwtAuthPayload>({
@@ -37,8 +37,16 @@ export class JwtStrategies implements JwtStrategiesImplementation.Interface {
           options as JwtSignOptions,
         ),
       }),
-      verify: async (token: string): Promise<TPayload> =>
-        await this.jwtService.verifyAsync(token, options as JwtVerifyOptions),
+      verify: async (token: string): Promise<TPayload> => {
+        try {
+          return await this.jwtService.verifyAsync(
+            token,
+            options as JwtVerifyOptions,
+          );
+        } catch (e) {
+          throw new UnauthorizedException();
+        }
+      },
     };
   }
 }
