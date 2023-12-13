@@ -23,6 +23,7 @@ export class AuthController {
     await this.authService.confirmUser(token);
   }
 
+  @Public()
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() userLoginDto: UserLoginDto): Promise<JwtSignature> {
