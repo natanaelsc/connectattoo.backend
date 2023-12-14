@@ -4,6 +4,7 @@ import { User } from '@prisma/client';
 import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
 import { UserRepository } from './user.repository';
 import { IAddress } from './interfaces/address.interface';
+import { IGetConfirmed } from './interfaces/get-confirmed.interface';
 
 @Injectable()
 export class UserService {
@@ -27,5 +28,13 @@ export class UserService {
 
   async confirmUser(email: string): Promise<void> {
     await this.userRepository.update({ email }, { isEmailConfirmed: true });
+  }
+
+  async getConfirmedUser(email: string): Promise<IGetConfirmed> {
+    const user = await this.userRepository.getUserByEmail(email);
+
+    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+
+    return { emailConfirmed: !!user.isEmailConfirmed };
   }
 }
