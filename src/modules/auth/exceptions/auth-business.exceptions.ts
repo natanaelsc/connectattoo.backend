@@ -2,6 +2,7 @@ import {
   ConflictException,
   ForbiddenException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 export class AuthBusinessExceptions {
@@ -26,5 +27,9 @@ export class AuthBusinessExceptions {
 
   static emailAlreadyVerifiedException() {
     return new ForbiddenException('Usuário já confirmado.');
+  }
+
+  static invalidTokenException() {
+    return new UnauthorizedException('Token inválido.');
   }
 }

@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService, JwtSignOptions, JwtVerifyOptions } from '@nestjs/jwt';
 import { JwtMailPayload } from './interfaces/jwt-mail-payload.interface';
 import { JwtSignature } from './interfaces/jwt-signature.interface';
 import { JwtStrategiesImplementation } from './interfaces/jwt-strategies.interface';
 import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
+import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
 
 @Injectable()
 export class JwtStrategies implements JwtStrategiesImplementation.Interface {
@@ -44,7 +45,7 @@ export class JwtStrategies implements JwtStrategiesImplementation.Interface {
             options as JwtVerifyOptions,
           );
         } catch (e) {
-          throw new UnauthorizedException();
+          throw AuthBusinessExceptions.invalidTokenException();
         }
       },
     };
