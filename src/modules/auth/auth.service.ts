@@ -53,6 +53,7 @@ export class AuthService {
     const payload: JwtAuthPayload = {
       userId: user.id,
       email: user.email,
+      isEmailConfirmed: user.isEmailConfirmed,
       isArtist: !!user.tattooArtistId,
     };
 
