@@ -4,9 +4,10 @@ import { UserModule } from './modules/user/user.module';
 import { AdapterModule } from './shared/adapters/adapter.module';
 import { AppController } from './app.controller';
 import { PrismaModule } from './shared/adapters/prisma/prisma.module';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
-  imports: [AdapterModule, AuthModule, UserModule, PrismaModule],
+  imports: [AdapterModule, AuthModule, UserModule, PrismaModule, ProfileModule],
   controllers: [AppController],
 })
 export class AppModule {}
