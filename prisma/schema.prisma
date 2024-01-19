@@ -14,7 +14,7 @@ model User {
   password         String
   termsAccepted    Boolean       @default(false)
   isEmailConfirmed Boolean       @default(false)
-  tattooArtist     TattooArtist? @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade) //perfil
+  tattooArtist     TattooArtist? @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
   tattooArtistId   String?       @unique
   profile          Profile?      @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId        String?       @unique
