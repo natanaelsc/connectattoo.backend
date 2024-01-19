@@ -10,6 +10,7 @@ import { JwtSignature } from './interfaces/jwt-signature.interface';
 import { IRegisterArtist } from './interfaces/register-artist.interface';
 import { IRegisterUser } from './interfaces/register-user.interface';
 import { JwtStrategies } from './jwt.strategies';
+import { ProfileService } from '../profile/profile.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private jwtStrategies: JwtStrategies,
     private mailService: MailService,
     private userService: UserService,
+    private profileService: ProfileService,
   ) {}
 
   async registerUser(userData: IRegisterUser): Promise<JwtSignature> {
@@ -34,27 +36,28 @@ export class AuthService {
   }
 
   async login(userLoginDto: UserLoginDto): Promise<JwtSignature> {
-    const user = await this.userService.getUserByEmail(userLoginDto.email);
+    const userAndProfile = await this.userService.getUserAndProfileByEmail(userLoginDto.email);
 
-    if (!user) throw AuthBusinessExceptions.invalidCredentialsException();
+    if (!userAndProfile) throw AuthBusinessExceptions.invalidCredentialsException();
 
     const isValidPassword = HashUtil.verify(
       userLoginDto.password,
-      user.password,
+      userAndProfile.password,
     );
 
     if (!isValidPassword)
       throw AuthBusinessExceptions.invalidCredentialsException();
 
-    if (!user.isEmailConfirmed) {
+    if (!userAndProfile.isEmailConfirmed) {
       throw AuthBusinessExceptions.emailNotVerifiedException();
     }
 
     const payload: JwtAuthPayload = {
-      userId: user.id,
-      email: user.email,
-      isEmailConfirmed: user.isEmailConfirmed,
-      isArtist: !!user.tattooArtistId,
+      userId: userAndProfile.id,
+      profileId: userAndProfile.profile!.id,
+      email: userAndProfile.email,
+      isEmailConfirmed: userAndProfile.isEmailConfirmed,
+      isArtist: !!userAndProfile.tattooArtistId,
     };
 
     return await this.jwtStrategies.auth.sign(payload);
@@ -82,20 +85,24 @@ export class AuthService {
       email: userData.email,
     });
 
-    const [firstName, ...lastName] = userData.name.split(' ');
-
     const createdUser = await this.userService.createUser({
-      firstName,
-      lastName: lastName.join(' '),
       email: userData.email,
       password,
-      birthDate: userData.birthDate,
       termsAccepted: userData.termsAccepted,
     });
 
+    const createdProfile = await this.profileService.create(
+      {
+        name: userData.name,
+        username: userData.email.split('@')[0],
+        birthDate: new Date(userData.birthDate),
+      },
+      createdUser.id,
+    );
+
     await this.mailService.sendConfirmationEmail(
       createdUser.email,
-      createdUser.firstName,
+      createdProfile.name.split(' ')[0],
       accessToken,
     );
 

@@ -9,6 +9,6 @@ export class ProfileController {
 
   @Get('/me')
   async me(@Req() req: SignedRequest): Promise<IMeProfile> {
-    return await this.profileService.me(req.user.userId);
+    return await this.profileService.me(req.user.profileId);
   }
 }

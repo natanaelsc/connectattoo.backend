@@ -8,6 +8,6 @@ import { PrismaModule } from '~/shared/adapters/prisma/prisma.module';
   imports: [PrismaModule],
   controllers: [ProfileController],
   providers: [ProfileService, ProfileRepository],
-  exports: [ProfileRepository],
+  exports: [ProfileService, ProfileRepository],
 })
 export class ProfileModule {}

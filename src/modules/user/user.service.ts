@@ -5,13 +5,31 @@ import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.excepti
 import { UserRepository } from './user.repository';
 import { IAddress } from './interfaces/address.interface';
 import { IGetConfirmed } from './interfaces/get-confirmed.interface';
+import { IGetUserAndProfileByEmail } from './interfaces/get-user-profile-by-email.interface';
 
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async getUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.getUserByEmail(email);
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.getUserByEmail(email);
+
+    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+
+    return user;
+  }
+
+  async getUserAndProfileByEmail(
+    email: string,
+  ): Promise<IGetUserAndProfileByEmail> {
+    const userAndProfile = await this.userRepository.getUserAndProfileByEmail(
+      email,
+    );
+
+    if (!userAndProfile?.profile)
+      throw AuthBusinessExceptions.userNotFoundException();
+
+    return userAndProfile;
   }
 
   async createUser(userData: IUser): Promise<User> {

@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
 
     const payload = await this.jwtStrategies.auth.verify(token);
 
-    this.isEmailConfirmed(payload);
+    // this.isEmailConfirmed(payload); //desativado temporariamente para ajustar token de registro
 
     request['user'] = payload;
 
