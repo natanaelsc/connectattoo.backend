@@ -10,17 +10,48 @@ datasource db {
 
 model User {
   id               String        @id @default(uuid())
-  firstName        String
-  lastName         String
   email            String        @unique
   password         String
-  birthDate        String
   termsAccepted    Boolean       @default(false)
   isEmailConfirmed Boolean       @default(false)
   tattooArtist     TattooArtist? @relation(fields: [tattooArtistId], references: [id], onDelete: Cascade)
   tattooArtistId   String?       @unique
+  profile          Profile?      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId        String?       @unique
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
+}
+
+model Profile {
+  id             String        @id @default(uuid())
+  name           String
+  username       String
+  birthDate      DateTime
+  imageProfile   ImageProfile? @relation(fields: [imageProfileId], references: [id], onDelete: Cascade)
+  imageProfileId String?       @unique
+  user           User?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  tags           Tag[]
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  name      String
+  profiles  Profile[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model ImageProfile {
+  id        String   @id @default(uuid())
+  url       String
+  size      Int
+  heigth    Int
+  width     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile?
 }
 
 model TattooArtist {

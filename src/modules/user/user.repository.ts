@@ -3,13 +3,24 @@ import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { IUser } from './interfaces/user.interface';
 import { Prisma, User } from '@prisma/client';
 import { IAddress } from './interfaces/address.interface';
+import { Nullable } from '~/shared/interface/nullable.type';
+import { IGetUserAndProfileByEmail } from './interfaces/get-user-profile-by-email.interface';
 
 @Injectable()
 export class UserRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<Nullable<User>> {
     return await this.prismaService.user.findUnique({ where: { email } });
+  }
+
+  async getUserAndProfileByEmail(
+    email: string,
+  ): Promise<IGetUserAndProfileByEmail> {
+    return await this.prismaService.user.findUnique({
+      where: { email },
+      include: { profile: true },
+    });
   }
 
   async create(data: IUser): Promise<User> {
