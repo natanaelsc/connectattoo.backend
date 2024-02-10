@@ -1,0 +1,3 @@
+[submodule "connectattoo.email.templates"]
+	path = src/shared/adapters/mail/templates
+	url = https://github.com/connectattoo/connectattoo.email.templates
