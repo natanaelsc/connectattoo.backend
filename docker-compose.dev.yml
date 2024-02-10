@@ -32,6 +32,7 @@ services:
       - /bin/sh
       - -c
       - |
+        git submodule update --remote
         npx prisma migrate dev
         npm run start:dev
 

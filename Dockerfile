@@ -1,12 +1,16 @@
 FROM node:18-alpine AS development
 
+RUN apk --no-cache add git
+
 WORKDIR /api
 
-COPY --chown=node:node ./package*.json ./
-
-RUN npm ci
+RUN git config --global --add safe.directory /api
 
 COPY --chown=node:node . .
+
+RUN git submodule update --init --recursive
+
+RUN npm ci
 
 RUN npx prisma generate
 
