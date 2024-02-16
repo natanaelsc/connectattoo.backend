@@ -36,9 +36,12 @@ export class AuthService {
   }
 
   async login(userLoginDto: UserLoginDto): Promise<JwtSignature> {
-    const userAndProfile = await this.userService.getUserAndProfileByEmail(userLoginDto.email);
+    const userAndProfile = await this.userService.getUserAndProfileByEmail(
+      userLoginDto.email,
+    );
 
-    if (!userAndProfile) throw AuthBusinessExceptions.invalidCredentialsException();
+    if (!userAndProfile)
+      throw AuthBusinessExceptions.invalidCredentialsException();
 
     const isValidPassword = HashUtil.verify(
       userLoginDto.password,
@@ -63,8 +66,8 @@ export class AuthService {
     return await this.jwtStrategies.auth.sign(payload);
   }
 
-  async confirmUser(token: string): Promise<void> {
-    const { email } = await this.jwtStrategies.mail.verify(token);
+  async confirmUser(mailToken: string): Promise<void> {
+    const { email } = await this.jwtStrategies.mail.verify(mailToken);
 
     const user = await this.userService.getUserByEmail(email);
 
@@ -81,9 +84,10 @@ export class AuthService {
   ): Promise<JwtSignature & Required<IUser>> {
     const password = HashUtil.hash(userData.password);
 
-    const { accessToken } = await this.jwtStrategies.mail.sign({
-      email: userData.email,
-    });
+    const { accessToken: confirmationToken } =
+      await this.jwtStrategies.mail.sign({
+        email: userData.email,
+      });
 
     const createdUser = await this.userService.createUser({
       email: userData.email,
@@ -103,9 +107,19 @@ export class AuthService {
     await this.mailService.sendConfirmationEmail(
       createdUser.email,
       createdProfile.name.split(' ')[0],
-      accessToken,
+      confirmationToken,
     );
 
-    return { ...createdUser, accessToken };
+    const payload: JwtAuthPayload = {
+      userId: createdUser.id,
+      profileId: createdProfile.id,
+      email: createdUser.email,
+      isEmailConfirmed: createdUser.isEmailConfirmed,
+      isArtist: !!createdUser.tattooArtistId,
+    };
+
+    const { accessToken } = await this.jwtStrategies.auth.sign(payload);
+
+    return { ...createdUser, accessToken }; //retorna token de email
   }
 }
