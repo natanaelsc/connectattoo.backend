@@ -5,8 +5,7 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: Dockerfile
-      target: development
+      dockerfile: Dockerfile.dev
       args:
         - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
@@ -27,14 +26,7 @@ services:
       - connectattoo
     volumes:
       - .:/api
-      - /api/node_modules
-    command:
-      - /bin/sh
-      - -c
-      - |
-        git submodule update --remote
-        npx prisma migrate dev
-        npm run start:dev
+    entrypoint: scripts/docker/entrypoint.sh
 
   postgres:
     container_name: postgres
