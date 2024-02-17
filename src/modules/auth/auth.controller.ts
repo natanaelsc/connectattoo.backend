@@ -20,8 +20,8 @@ export class AuthController {
 
   @Public()
   @Get('/confirm')
-  async confirmEmail(@Query('token') token: string): Promise<void> {
-    await this.authService.confirmUser(token);
+  async confirmEmail(@Query('token') mailToken: string): Promise<void> {
+    await this.authService.confirmUser(mailToken);
   }
 
   @Public()

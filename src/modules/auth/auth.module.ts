@@ -7,9 +7,10 @@ import { MailModule } from '~/shared/adapters/mail/mail.module';
 import { JwtStrategies } from './jwt.strategies';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
+import { ProfileModule } from '../profile/profile.module';
 
 @Module({
-  imports: [UserModule, JwtModule, MailModule],
+  imports: [UserModule, JwtModule, MailModule, ProfileModule],
   controllers: [AuthController],
   providers: [
     AuthService,
