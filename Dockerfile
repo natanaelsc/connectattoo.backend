@@ -11,7 +11,7 @@ RUN git config --global --add safe.directory /api \
 
 ENV NODE_ENV production
 
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --only=production && npm cache clean --force
 
 RUN npm run build
 
