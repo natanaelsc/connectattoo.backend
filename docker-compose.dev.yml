@@ -26,7 +26,7 @@ services:
       - connectattoo
     volumes:
       - .:/api
-    entrypoint: scripts/docker/entrypoint.sh
+    entrypoint: .docker/entrypoint.sh
 
   postgres:
     container_name: postgres
