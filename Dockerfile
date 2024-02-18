@@ -6,8 +6,7 @@ WORKDIR /api
 
 COPY --chown=node:node . .
 
-RUN git config --global --add safe.directory /api \
-  && git submodule update --init --recursive
+RUN git config --global --add safe.directory /api && git submodule update --init --recursive
 
 ENV NODE_ENV production
 
