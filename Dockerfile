@@ -4,9 +4,11 @@ RUN apk --no-cache add git
 
 WORKDIR /api
 
-COPY --chown=node:node . .
+RUN git clone --recurse-submodules https://github.com/connectattoo/connectattoo.backend .
 
-RUN git config --global --add safe.directory /api && git submodule update --init --recursive
+COPY --chown=node:node tsconfig.json package*.json nest-cli.json .gitmodules ./
+
+COPY --chown=node:node /src ./src
 
 ENV NODE_ENV production
 
