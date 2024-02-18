@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    
+    "jsx": "react-jsx",
     "module": "commonjs",
     "declaration": true,
     "strictNullChecks": true,
@@ -21,7 +23,8 @@
     "paths": {
       "~": ["./src"],
       "~/*": ["./src/*"]
-    }
+    },
+    
   },
   "include": ["src/**/*", "*.d.ts"],
   "exclude": ["dist", "node_modules"]

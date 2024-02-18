@@ -1,6 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from './mail.service';
 
 @Module({
@@ -17,14 +16,9 @@ import { MailService } from './mail.service';
         },
         ignoreTLS: true,
       },
+      preview: true,
       defaults: { from: `"Connectattoo" <${process.env.MAILDEV_FROM}>` },
-      template: {
-        dir: __dirname + '/templates',
-        adapter: new HandlebarsAdapter(),
-        options: {
-          strict: true,
-        },
-      },
+     
     }),
   ],
   providers: [MailService],

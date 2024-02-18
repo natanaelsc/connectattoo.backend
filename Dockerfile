@@ -1,40 +1,21 @@
-FROM node:18-alpine AS development
+FROM node:18-alpine AS build
+
+RUN apk --no-cache add git
 
 WORKDIR /api
-
-COPY --chown=node:node ./package*.json ./
-
-RUN npm ci
 
 COPY --chown=node:node . .
 
-RUN npx prisma generate
-
-USER node
-
-#####################
-
-FROM node:18-alpine AS build
-
-WORKDIR /api
-
-COPY --chown=node:node --from=development /api/node_modules ./node_modules
-
-COPY --chown=node:node tsconfig.json package*.json nest-cli.json ./
-
-COPY --chown=node:node /src ./src
-
-COPY --chown=node:node /prisma ./prisma/
-
-RUN npm run build
+RUN git config --global --add safe.directory /api \
+  && git submodule update --init --recursive
 
 ENV NODE_ENV production
 
 RUN npm ci --only=production && npm cache clean --force
 
-USER node
+RUN npm run build
 
-#####################
+USER node
 
 FROM node:18-alpine AS production
 
@@ -45,7 +26,5 @@ COPY --chown=node:node --from=build /api/node_modules ./node_modules
 COPY --chown=node:node --from=build /api/dist ./dist
 
 COPY --chown=node:node --from=build /api/prisma ./prisma
-
-COPY --chown=node:node --from=build /api/package*.json ./
 
 CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/main.js"]
