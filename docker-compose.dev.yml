@@ -66,10 +66,6 @@ services:
       - ADMINER_DEFAULT_SYSTEM=pgsql
       - ADMINER_DESIGN=hydra
 
-volumes:
-  connectattoo:
-    name: connectattoo
-
 networks:
   connectattoo:
     name: connectattoo

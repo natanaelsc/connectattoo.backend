@@ -45,10 +45,6 @@ services:
       timeout: 5s
       retries: 5
 
-volumes:
-  connectattoo:
-    name: connectattoo
-
 networks:
   connectattoo:
     name: connectattoo
