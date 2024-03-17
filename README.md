@@ -4,47 +4,55 @@
 
 Este repositório contém todo o código para o backend do projeto Connectattoo. O projeto foi desenvolvido utilizando o framework NestJS, que é baseado em NodeJS e Typescript. O banco de dados utilizado é o PostgreSQL.
 
-## Executando Projeto
+## Execução
 
-Antes de executar a api, é necessário criar um arquivo .env na raiz do projeto baseado no arquivo [.env.example](.env.example) e instalar o [Docker Desktop](https://www.docker.com/products/docker-desktop).
+Antes de iniciar, é necessário instalar o [Docker Desktop](https://www.docker.com/products/docker-desktop) e criar o arquivo .env na raiz do projeto baseado no arquivo [.env.example](.env.example).
 
-Execute o comando para subir os serviços:
+1. Execute o comando para subir os serviços:
 
-```bash
-docker compose up -d
-```
+    ```bash
+    docker compose up -d
+    ```
 
-Execute o comando para parar os serviços e remover rastros:
+    A porta padrão da API é a 3000. Voce pode alterar a porta no arquivo [.env](.env).
 
-```bash
-docker compose down --remove-orphans --volumes --rmi local
-```
+    Aguade a inicialização dos serviços.
 
-## Executando Projeto (Desenvolvimento)
+2. Execute o comando para parar os serviços e remover rastros:
 
-Execute o comando para subir os serviços:
+    ```bash
+    docker compose down --remove-orphans --volumes --rmi local
+    ```
 
-```bash
-docker compose -f docker-compose.dev.yml up
-```
+## Execução (Desenvolvimento)
 
-Recomendo não utilizar `-d` para que você possa ver os logs dos serviços.
+1. Execute o comando para subir os serviços:
 
-Mas caso queira, execute o comando para ver os logs:
+    ```bash
+    docker compose -f docker-compose.dev.yml up
+    ```
 
-```bash
-docker compose -f docker-compose.dev.yml logs -f
-```
+    Aguade a inicialização dos serviços.
 
-Execute o comando para parar os serviços e remover rastros:
+    A porta padrão da API é a 3000. Voce pode alterar a porta no arquivo [.env](.env).
 
-```bash
-docker compose -f docker-compose.dev.yml down --remove-orphans --volumes --rmi local
-```
+    Você pode acessar o Adminer em: <http://localhost:8082> e inserir as seguintes credenciais:
 
-A porta padrão da API é a 3000.
+    ```yaml
+    Sistema: PostgreSQL
+    Servidor: postgres
+    Usuario: postgres
+    Senha: mQdBpz6yW3zpPOe86gtcfSHgk6zsbVJxsYaTOIq
+    Banco de dados: connectattoo
+    ```
 
-Voce pode acessar o BDeaver em: <http://localhost:8978>.
+2. Execute o comando para parar os serviços e remover rastros:
+
+    ```bash
+    docker compose -f docker-compose.dev.yml down --remove-orphans --volumes --rmi local
+    ```
+
+## [Possíveis Erros na Inicialização](/docs/erros-na-inicializacao.md)
 
 ## Executando testes
 
