@@ -46,6 +46,13 @@ Antes de iniciar, é necessário instalar o [Docker Desktop](https://www.docker.
     Banco de dados: connectattoo
     ```
 
+    Se tiver problemas com o Adminer, tente acessar o banco de dados com o Prisma Studio.
+    Em uma nova guia do seu terminal, execute o comando:
+
+    ```bash
+    docker compose -f docker-compose.dev.yml exec api npx prisma studio
+    ```
+
 2. Execute o comando para parar os serviços e remover rastros:
 
     ```bash
