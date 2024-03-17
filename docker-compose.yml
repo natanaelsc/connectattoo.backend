@@ -7,11 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-      args:
-        - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
       - NODE_ENV=production
-      - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     restart: 'on-failure'
     env_file:
       - .env
@@ -20,16 +17,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    links:
-      - postgres
     networks:
       - connectattoo
 
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:alpine
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - .env
@@ -40,14 +35,10 @@ services:
     volumes:
       - ./.docker/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  connectattoo:
-    name: connectattoo
 
 networks:
   connectattoo:

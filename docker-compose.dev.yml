@@ -6,11 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      args:
-        - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     environment:
       - NODE_ENV=development
-      - POSTGRES_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/connectattoo?schema=public&connect_timeout=60
     restart: 'on-failure'
     env_file:
       - .env
@@ -20,19 +17,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    links:
-      - postgres
     networks:
       - connectattoo
     volumes:
       - .:/api
-    entrypoint: .docker/entrypoint.sh
+    entrypoint: sh -c "./.docker/entrypoint.sh"
 
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:alpine
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - .env
@@ -43,7 +38,7 @@ services:
     volumes:
       - ./.docker/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -d connectattoo -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -56,8 +51,6 @@ services:
       - 8082:8080
     networks:
       - connectattoo
-    links:
-      - postgres
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,10 +58,6 @@ services:
       - ADMINER_DEFAULT_SERVER=postgres
       - ADMINER_DEFAULT_SYSTEM=pgsql
       - ADMINER_DESIGN=hydra
-
-volumes:
-  connectattoo:
-    name: connectattoo
 
 networks:
   connectattoo:
