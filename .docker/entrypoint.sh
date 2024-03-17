@@ -1,12 +1,8 @@
 #!/bin/sh
 
-if [ ! -f ".env" ]; then
-  cp .env.example .env
-fi
-
 git config --global --add safe.directory /api
 
-git submodule update --init --recursive
+git submodule update --init --recursive -f
 
 npm ci
 
