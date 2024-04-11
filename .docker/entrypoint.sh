@@ -1,5 +1,4 @@
 #!/bin/sh
-
 git config --global --add safe.directory /api
 
 git submodule update --init --recursive -f
@@ -7,6 +6,8 @@ git submodule update --init --recursive -f
 npm ci
 
 npx prisma generate
-npx prisma migrate dev
+npx prisma migrate deploy
 
-npm run start:dev
+node dist/shared/adapters/prisma/seeds/index.js
+
+npm run start
