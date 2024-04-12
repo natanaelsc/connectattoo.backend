@@ -5,6 +5,7 @@ import { ProfileRepository } from './profile.repository';
 import { ProfileBusinessExceptions } from './exceptions/profile-business.exceptions';
 import { ICreateProfile } from './interface/create-profile.interface';
 import { Profile } from '@prisma/client';
+import { IUpdateProfile } from './interface/update-profile.interface';
 
 @Injectable()
 export class ProfileService {
@@ -33,5 +34,15 @@ export class ProfileService {
       throw ProfileBusinessExceptions.profileAlreadyExistsException();
 
     return await this.profileRepository.create(data, userId);
+  }
+
+  async updateMe(profileId: string, body: IUpdateProfile): Promise<void> {
+    const profile = await this.profileRepository.getProfileById(profileId);
+
+    if (!profile) {
+      throw ProfileBusinessExceptions.profileNotFoundException();
+    }
+
+    await this.profileRepository.updateProfile(profileId, body);
   }
 }
