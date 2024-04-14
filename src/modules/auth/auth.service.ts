@@ -99,7 +99,7 @@ export class AuthService {
       {
         name: userData.name,
         username: userData.email.split('@')[0],
-        birthDate: new Date(userData.birthDate),
+        birthDate: userData.birthDate,
       },
       createdUser.id,
     );
