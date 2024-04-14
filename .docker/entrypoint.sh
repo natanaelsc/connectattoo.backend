@@ -10,4 +10,4 @@ npx prisma migrate deploy
 
 node dist/shared/adapters/prisma/seeds/index.js
 
-npm run start
+npm run start:dev
