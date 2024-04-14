@@ -5,7 +5,6 @@ import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
 import { getProfileWithTagsAndImageProfileType } from './interface/get-profile-with-tags-and-image-profile.interface.';
 import { IUpdateProfile } from './interface/update-profile.interface';
-import { DateConverter } from '../../shared/utils/date-converter.util';
 
 @Injectable()
 export class ProfileRepository {
@@ -28,7 +27,7 @@ export class ProfileRepository {
       data: {
         name: data.name,
         username: data.username,
-        birthDate: new Date(data.birthDate),
+        birthDate: data.birthDate,
         user: { connect: { id: userId } },
       },
     });
@@ -52,7 +51,7 @@ export class ProfileRepository {
       data: {
         name: data.displayName,
         username: data.username,
-        birthDate: DateConverter.toISO8601(data.birthDate),
+        birthDate: data.birthDate,
       },
     });
   }
