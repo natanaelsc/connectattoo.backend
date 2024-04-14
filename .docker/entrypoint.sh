@@ -8,6 +8,6 @@ npm ci
 npx prisma generate
 npx prisma migrate deploy
 
-node dist/shared/adapters/prisma/seeds/index.js
+npm run seed
 
 npm run start:dev
