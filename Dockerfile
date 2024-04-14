@@ -20,14 +20,12 @@ USER node
 
 FROM node:18-alpine AS production
 
-USER node
-
 WORKDIR /api
 
-COPY --chown=node:node --chmod=755 --from=build /api/node_modules ./node_modules
+COPY --chown=root:root --chmod=755 --from=build /api/node_modules ./node_modules
 
-COPY --chown=node:node --chmod=755 --from=build /api/dist ./dist
+COPY --chown=root:root --chmod=755 --from=build /api/dist ./dist
 
-COPY --chown=node:node --chmod=755 --from=build /api/prisma ./prisma
+COPY --chown=root:root --chmod=755 --from=build /api/prisma ./prisma
 
 CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/shared/adapters/prisma/seeds/index.js;node dist/main.js"]
