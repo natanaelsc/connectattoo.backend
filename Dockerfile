@@ -6,9 +6,9 @@ WORKDIR /api
 
 RUN git clone --recurse-submodules https://github.com/connectattoo/connectattoo.backend .
 
-COPY --chown=node:node tsconfig.json package*.json nest-cli.json .gitmodules ./
+COPY --chown=node:node --chmod=755 tsconfig.json package*.json nest-cli.json .gitmodules ./
 
-COPY --chown=node:node /src ./src
+COPY --chown=node:node --chmod=755 /src ./src
 
 ENV NODE_ENV production
 
@@ -22,10 +22,10 @@ FROM node:18-alpine AS production
 
 WORKDIR /api
 
-COPY --chown=node:node --from=build /api/node_modules ./node_modules
+COPY --chown=root:root --chmod=755 --from=build /api/node_modules ./node_modules
 
-COPY --chown=node:node --from=build /api/dist ./dist
+COPY --chown=root:root --chmod=755 --from=build /api/dist ./dist
 
-COPY --chown=node:node --from=build /api/prisma ./prisma
+COPY --chown=root:root --chmod=755 --from=build /api/prisma ./prisma
 
-CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/main.js"]
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/shared/adapters/prisma/seeds/index.js;node dist/main.js"]
