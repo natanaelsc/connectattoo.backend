@@ -5,6 +5,7 @@ import { IMeProfile } from './interface/me.interface';
 import { IUpdateProfile } from './interface/update-profile.interface';
 import { ArrayDuplicatedIndexPipe } from '../../shared/utils/array-duplicated-index.util';
 import { ArrayLengthPipe } from '../../shared/utils/array-length.util';
+import { IGetTags } from '../tag/interface/get-tags.interface';
 
 @Controller('profile')
 export class ProfileController {
@@ -13,6 +14,11 @@ export class ProfileController {
   @Get('/me')
   async me(@Req() req: ISignedRequest): Promise<IMeProfile> {
     return await this.profileService.me(req.user.profileId);
+  }
+
+  @Get('tags')
+  async getTags(@Req() req: ISignedRequest): Promise<IGetTags[]> {
+    return await this.profileService.getTags(req.user.profileId);
   }
 
   @Post('tags')

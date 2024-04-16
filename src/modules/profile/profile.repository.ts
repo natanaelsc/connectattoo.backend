@@ -56,6 +56,15 @@ export class ProfileRepository {
     });
   }
 
+  async getTags(profileId: string) {
+    const profile = await this.prismaService.profile.findFirstOrThrow({
+      where: { id: profileId },
+      select: { tags: { select: { id: true, name: true } } },
+    });
+
+    return profile.tags;
+  }
+
   async setTags(profileId: string, tags: string[]) {
     return await this.prismaService.profile.update({
       where: { id: profileId },
