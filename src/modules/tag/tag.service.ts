@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { TagRepository } from './tag.repository';
 import { TagBusinessExceptions } from './exceptions/profile-business.exceptions';
-import { IGetTagsNames } from './interface/get-tags-names.interface';
+import { IGetTags } from './interface/get-tags.interface';
 
 @Injectable()
 export class TagService {
   constructor(private tagRepository: TagRepository) {}
 
-  async getTagsNames(): Promise<IGetTagsNames[]> {
+  async getTags(): Promise<IGetTags[]> {
     return await this.tagRepository.getTagsNames();
   }
 
