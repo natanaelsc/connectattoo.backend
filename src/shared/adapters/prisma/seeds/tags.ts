@@ -1,13 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 
 const dataTags = [
-  { name: 'Tradicional Americana (ou Old School)' },
+  { name: 'Tradicional Americana' },
+  { name: 'Old School' },
   { name: 'Realista' },
   { name: 'Aquarela' },
   { name: 'Geométrica' },
   { name: 'Pontilhismo' },
   { name: 'Minimalista' },
-  { name: 'Tatuagem Oriental (ou Irezumi)' },
+  { name: 'Tatuagem Oriental' },
+  { name: 'Irezumi' },
   { name: 'Neotradicional' },
   { name: 'Biomecânica' },
   { name: 'New School' },
@@ -24,7 +26,7 @@ export namespace Tags {
 
   export async function populate(prisma: PrismaClient): Promise<void> {
     console.log('Seeding tags...');
-    
+
     await prisma.tag.createMany({ data: dataTags });
   }
 
