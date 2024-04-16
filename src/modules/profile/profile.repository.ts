@@ -56,7 +56,7 @@ export class ProfileRepository {
     });
   }
 
-  async setTagsToProfile(profileId: string, tags: string[]) {
+  async setTags(profileId: string, tags: string[]) {
     return await this.prismaService.profile.update({
       where: { id: profileId },
       data: {

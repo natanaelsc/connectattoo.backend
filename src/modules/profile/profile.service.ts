@@ -50,9 +50,9 @@ export class ProfileService {
     await this.profileRepository.updateProfile(profileId, body);
   }
 
-  async setTagsToProfile(profileId: string, tags: string[]): Promise<void> {
+  async setTags(profileId: string, tags: string[]): Promise<void> {
     await this.tagService.validateTags(tags);
 
-    await this.profileRepository.setTagsToProfile(profileId, tags);
+    await this.profileRepository.setTags(profileId, tags);
   }
 }

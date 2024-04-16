@@ -16,11 +16,11 @@ export class ProfileController {
   }
 
   @Post('tags')
-  async setTagsToProfile(
+  async setTags(
     @Req() req: ISignedRequest,
     @Body(new ArrayLengthPipe(1, 5), ArrayDuplicatedIndexPipe) tags: string[],
   ): Promise<void> {
-    await this.profileService.setTagsToProfile(req.user.profileId, tags);
+    await this.profileService.setTags(req.user.profileId, tags);
   }
 
   @Put('/me')
