@@ -8,6 +8,7 @@ import { ProfileModule } from './modules/profile/profile.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './shared/interceptor/exception-filter.interceptor';
 import { TagModule } from './modules/tag/tag.module';
+import { LocationModule } from './modules/location/location.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TagModule } from './modules/tag/tag.module';
     PrismaModule,
     ProfileModule,
     TagModule,
+    LocationModule
   ],
   providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],
   controllers: [AppController],
