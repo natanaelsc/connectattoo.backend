@@ -7,6 +7,7 @@ import { ICreateProfile } from './interface/create-profile.interface';
 import { Profile } from '@prisma/client';
 import { IUpdateProfile } from './interface/update-profile.interface';
 import { TagService } from '../tag/tag.service';
+import { IGetTags } from '../tag/interface/get-tags.interface';
 
 @Injectable()
 export class ProfileService {
@@ -48,6 +49,14 @@ export class ProfileService {
     }
 
     await this.profileRepository.updateProfile(profileId, body);
+  }
+
+  async getTags(profileId: string): Promise<IGetTags[]> {
+    const profile = await this.profileRepository.getProfileById(profileId);
+
+    if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
+
+    return await this.profileRepository.getTags(profileId);
   }
 
   async setTags(profileId: string, tags: string[]): Promise<void> {
