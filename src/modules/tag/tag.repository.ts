@@ -10,4 +10,10 @@ export class TagRepository {
       select: { id: true, name: true },
     });
   }
+
+  async getTagsByIds(tagsIds: string[]) {
+    return await this.prismaService.tag.findMany({
+      where: { id: { in: tagsIds } },
+    });
+  }
 }

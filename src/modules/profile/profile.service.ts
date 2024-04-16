@@ -6,10 +6,14 @@ import { ProfileBusinessExceptions } from './exceptions/profile-business.excepti
 import { ICreateProfile } from './interface/create-profile.interface';
 import { Profile } from '@prisma/client';
 import { IUpdateProfile } from './interface/update-profile.interface';
+import { TagService } from '../tag/tag.service';
 
 @Injectable()
 export class ProfileService {
-  constructor(private profileRepository: ProfileRepository) {}
+  constructor(
+    private profileRepository: ProfileRepository,
+    private tagService: TagService,
+  ) {}
 
   async me(profileId: string): Promise<IMeProfile> {
     const profile =
@@ -44,5 +48,11 @@ export class ProfileService {
     }
 
     await this.profileRepository.updateProfile(profileId, body);
+  }
+
+  async setTags(profileId: string, tags: string[]): Promise<void> {
+    await this.tagService.validateTags(tags);
+
+    await this.profileRepository.setTags(profileId, tags);
   }
 }
