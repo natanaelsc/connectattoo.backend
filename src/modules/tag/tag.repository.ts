@@ -16,13 +16,4 @@ export class TagRepository {
       where: { id: { in: tagsIds } },
     });
   }
-
-  async setTagsToProfile(profileId: string, tags: string[]) {
-    return await this.prismaService.profile.update({
-      where: { id: profileId },
-      data: {
-        tags: { connect: tags.map((tag) => ({ id: tag })) },
-      },
-    });
-  }
 }

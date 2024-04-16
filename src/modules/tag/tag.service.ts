@@ -11,13 +11,11 @@ export class TagService {
     return await this.tagRepository.getTagsNames();
   }
 
-  async setTagsToProfile(profileId: string, tags: string[]): Promise<void> {
+  async validateTags(tags: string[]): Promise<void> {
     const profileTags = await this.tagRepository.getTagsByIds(tags);
 
     if (profileTags.length !== tags.length) {
       throw TagBusinessExceptions.tagsNotFoundException();
     }
-
-    await this.tagRepository.setTagsToProfile(profileId, tags);
   }
 }
