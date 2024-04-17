@@ -70,8 +70,8 @@ model Address {
   city         String
   state        String
   country      String        @default("Brazil")
-  lat          Float?
-  lng          Float?
+  latitude     Float?
+  longitude    Float?
   zipCode      String
   tattooArtist TattooArtist?
   createdAt    DateTime      @default(now())

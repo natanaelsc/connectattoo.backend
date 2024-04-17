@@ -1,4 +1,4 @@
 export interface IDistanceMatrix {
-  origin: { lat: number; lng: number };
-  destination: { lat: number; lng: number };
+  origin: { latitude: number; longitude: number };
+  destination: { latitude: number; longitude: number };
 }

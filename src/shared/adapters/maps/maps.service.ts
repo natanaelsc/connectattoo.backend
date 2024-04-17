@@ -34,14 +34,14 @@ export class MapsService {
       params: {
         origins: [
           {
-            lat: origin.lat,
-            lng: origin.lng,
+            latitude: origin.latitude,
+            longitude: origin.longitude,
           },
         ],
         destinations: [
           {
-            lat: destination.lat,
-            lng: destination.lng,
+            latitude: destination.latitude,
+            longitude: destination.longitude,
           },
         ],
         units: UnitSystem.metric,
