@@ -54,8 +54,4 @@ export class MapsService {
       duration: distance.data.rows[0].elements[0].duration,
     };
   }
-
-  async calculateRadius(){
-
-  }
 }
