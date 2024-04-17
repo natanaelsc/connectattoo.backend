@@ -6,10 +6,15 @@ import { UserRepository } from './user.repository';
 import { IAddress } from './interfaces/address.interface';
 import { IGetConfirmed } from './interfaces/get-confirmed.interface';
 import { IGetUserAndProfileByEmail } from './interfaces/get-user-profile-by-email.interface';
+import { IAddressCoordinates } from './interfaces/address-coordinates.interface';
+import { MapsService } from '../../shared/adapters/maps/maps.service';
 
 @Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private mapsService: MapsService,
+  ) {}
 
   async getUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.getUserByEmail(email);
@@ -22,9 +27,8 @@ export class UserService {
   async getUserAndProfileByEmail(
     email: string,
   ): Promise<IGetUserAndProfileByEmail> {
-    const userAndProfile = await this.userRepository.getUserAndProfileByEmail(
-      email,
-    );
+    const userAndProfile =
+      await this.userRepository.getUserAndProfileByEmail(email);
 
     if (!userAndProfile?.profile)
       throw AuthBusinessExceptions.userNotFoundException();
@@ -41,7 +45,11 @@ export class UserService {
   }
 
   async createArtist(userId: string, address: IAddress): Promise<void> {
-    await this.userRepository.createArtist(userId, address);
+    const { geometry } = await this.mapsService.geocode(address);
+
+    const addressCoordinates: IAddressCoordinates = { ...address, ...geometry };
+
+    await this.userRepository.createArtist(userId, addressCoordinates);
   }
 
   async confirmUser(email: string): Promise<void> {

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { IUser } from './interfaces/user.interface';
 import { Prisma, User } from '@prisma/client';
-import { IAddress } from './interfaces/address.interface';
 import { Nullable } from '~/shared/interface/nullable.type';
 import { IGetUserAndProfileByEmail } from './interfaces/get-user-profile-by-email.interface';
+import { IAddressCoordinates } from './interfaces/address-coordinates.interface';
 
 @Injectable()
 export class UserRepository {
@@ -34,7 +34,10 @@ export class UserRepository {
     return await this.prismaService.user.update({ where, data });
   }
 
-  async createArtist(userId: string, address: IAddress): Promise<void> {
+  async createArtist(
+    userId: string,
+    address: IAddressCoordinates,
+  ): Promise<void> {
     await this.prismaService.tattooArtist.create({
       data: { user: { connect: { id: userId } }, address: { create: address } },
     });
