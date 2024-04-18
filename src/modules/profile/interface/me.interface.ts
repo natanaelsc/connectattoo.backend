@@ -1,8 +1,8 @@
 export interface IMeProfile {
   displayName: string;
   username: string;
-  age: number;
+  birthDate: string;
   imageProfile: any; // Será implementado posteriormente
-  interests: string[];
+  tags: string[];
   appointment: any; // Será implementado posteriormente
 }

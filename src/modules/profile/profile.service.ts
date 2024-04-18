@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IMeProfile } from './interface/me.interface';
-import { ageCalculator } from '~/shared/utils/age-calculator.util';
 import { ProfileRepository } from './profile.repository';
 import { ProfileBusinessExceptions } from './exceptions/profile-business.exceptions';
 import { ICreateProfile } from './interface/create-profile.interface';
@@ -25,9 +24,9 @@ export class ProfileService {
     return {
       displayName: profile.name,
       username: profile.username,
-      age: ageCalculator(new Date(profile.birthDate)),
+      birthDate: profile.birthDate,
       imageProfile: profile.imageProfile?.url ?? null,
-      interests: profile.tags.map((tag) => tag.name),
+      tags: profile.tags.map((tag) => tag.name),
       appointment: {}, //será implementado
     };
   }
