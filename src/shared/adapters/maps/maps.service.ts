@@ -15,7 +15,6 @@ export class MapsService {
 
   async geocode(address: IAddress) {
     const parsedAddress = `${address.street}, ${address.number} - ${address.city} - ${address.state}, ${address.zipCode}, ${address.country}`;
-    // const parsedAddress = `Rua Alba Aparecida Cardoso Luiz, 133-247 - Barra do Aririu, Palhoça - SC, 88134-530`;
 
     const geo = await this.mapsClient.geocode({
       params: {

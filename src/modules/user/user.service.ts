@@ -47,7 +47,11 @@ export class UserService {
   async createArtist(userId: string, address: IAddress): Promise<void> {
     const { geometry } = await this.mapsService.geocode(address);
 
-    const addressCoordinates: IAddressCoordinates = { ...address, ...geometry };
+    const addressCoordinates: IAddressCoordinates = {
+      ...address,
+      latitude: geometry.lat,
+      longitude: geometry.lng,
+    };
 
     await this.userRepository.createArtist(userId, addressCoordinates);
   }
