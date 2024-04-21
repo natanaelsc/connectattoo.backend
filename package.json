@@ -25,6 +25,7 @@
     "seed": "node dist/shared/adapters/prisma/seeds/index.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.556.0",
     "@connectattoo/email-templates": "0.0.0",
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "@nestjs-modules/mailer": "^1.9.1",
