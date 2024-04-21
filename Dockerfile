@@ -14,6 +14,8 @@ ENV NODE_ENV production
 
 RUN npm ci --only=production && npm cache clean --force
 
+RUN npx prisma generate
+
 RUN npm run build
 
 USER node
