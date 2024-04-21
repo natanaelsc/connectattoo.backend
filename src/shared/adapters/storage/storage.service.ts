@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Buckets } from './enum/bucket.enum';
+import { IUploadFile } from './interface/upload-file.interface';
 
 @Injectable()
-export class S3Service {
-  constructor(private s3Client: S3Client) {}
+export class StorageService {
+  constructor(private storageClient: S3Client) {}
 
   async uploadFile(
-    bucket: Buckets,
     path: string,
     filename: string,
     file: Buffer,
-  ) {
+  ): Promise<IUploadFile> {
     if (!path.endsWith('/')) {
       path = path + '/';
     }
 
     const object = new PutObjectCommand({
-      Bucket: bucket,
+      Bucket: process.env.STORAGE_BUCKET,
       Key: `${path}/${filename}`,
       Body: file,
     });
 
-    await this.s3Client.send(object);
+    await this.storageClient.send(object);
 
     return { filename, path };
   }
