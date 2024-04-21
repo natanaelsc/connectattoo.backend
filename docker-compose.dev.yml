@@ -66,6 +66,8 @@ services:
       - 4566:4566
     environment:
       - SERVICES=s3
+    env_file:
+      - .env
     volumes:
       - ./.docker/localstack/entrypoint.sh:/etc/localstack/init/ready.d/entrypoint.sh
     networks:
