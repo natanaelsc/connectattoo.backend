@@ -104,6 +104,8 @@ export class AuthService {
       createdUser.id,
     );
 
+    await this.profileService.vinculateRandomTags(createdProfile.id);
+
     await this.mailService.sendConfirmationEmail(
       createdUser.email,
       createdProfile.name.split(' ')[0],

@@ -16,4 +16,10 @@ export class TagRepository {
       where: { id: { in: tagsIds } },
     });
   }
+
+  async generateRandomTags() {
+    Math.random();
+
+    return await this.prismaService.tag.findMany({ where: {} });
+  }
 }
