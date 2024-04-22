@@ -5,12 +5,14 @@ import { JwtStrategies } from '~/modules/auth/jwt.strategies';
 import { IS_PUBLIC_KEY } from '~/shared/constants/public.constant';
 import { JwtAuthPayload } from './interfaces/jwt-auth-payload.interface';
 import { AuthBusinessExceptions } from './exceptions/auth-business.exceptions';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtStrategies: JwtStrategies,
     private reflector: Reflector,
+    private userService: UserService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
     const payload = await this.jwtStrategies.auth.verify(token);
 
-    // this.isEmailConfirmed(payload); //desativado temporariamente para ajustar token de registro
+    await this.isEmailConfirmed(payload);
 
     request['user'] = payload;
 
@@ -40,8 +42,10 @@ export class AuthGuard implements CanActivate {
     return isPublic;
   }
 
-  private isEmailConfirmed(payload: JwtAuthPayload): void {
-    if (!payload.isEmailConfirmed) {
+  private async isEmailConfirmed(payload: JwtAuthPayload): Promise<void> {
+    const user = await this.userService.getConfirmedUser(payload.email)
+
+    if (!user.emailConfirmed) {
       throw AuthBusinessExceptions.emailNotVerifiedException();
     }
   }
