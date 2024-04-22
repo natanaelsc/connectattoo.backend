@@ -15,14 +15,16 @@ export class StorageService {
       path = path + '/';
     }
 
+    const key = `${path}${filename}`
+
     const object = new PutObjectCommand({
       Bucket: process.env.STORAGE_BUCKET,
-      Key: `${path}/${filename}`,
+      Key: key,
       Body: file,
     });
 
     await this.storageClient.send(object);
 
-    return { filename, path };
+    return { filename, path, key };
   }
 }
