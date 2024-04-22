@@ -63,4 +63,10 @@ export class ProfileService {
 
     await this.profileRepository.setTags(profileId, tags);
   }
+
+  async vinculateRandomTags(profileId: string) {
+    const tags = await this.tagService.generateRandomTags();
+
+    await this.profileRepository.setTags(profileId, Array.from(tags));
+  }
 }

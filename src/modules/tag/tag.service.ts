@@ -18,4 +18,19 @@ export class TagService {
       throw TagBusinessExceptions.tagsNotFoundException();
     }
   }
+
+  async generateRandomTags(): Promise<Set<string>> {
+    const tags = await this.tagRepository.getTagsNames();
+
+    const set = new Set<string>();
+
+    while (set.size < 5) {
+      const min = 0;
+      const max = tags.length - 1;
+      const value = Math.floor(Math.random() * (max - min + 1)) + min;
+      set.add(tags[value].id);
+    }
+
+    return set;
+  }
 }
