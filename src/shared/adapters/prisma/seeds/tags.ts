@@ -87,8 +87,8 @@ export namespace Tags {
   export async function remove(prisma: PrismaClient): Promise<void> {
     console.log('Deleting tags...');
 
-    const remove = dataTags.map((tag) => tag.name);
+    const remove = dataTags.map((tag) => tag.id);
 
-    await prisma.tag.deleteMany({ where: { name: { in: remove } } });
+    await prisma.tag.deleteMany({ where: { id: {in: remove} } });
   }
 }
