@@ -26,7 +26,10 @@ export class ProfileService {
       username: profile.username,
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfile?.url ?? null,
-      tags: profile.tags.map((tag) => tag.name),
+      tags: profile.tags.map((tag) => ({
+        id: tag.id,
+        name: tag.name
+      })),
       appointment: {}, //será implementado
     };
   }
