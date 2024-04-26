@@ -28,7 +28,10 @@ export class ProfileService {
       username: profile.username,
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfile?.url ?? null,
-      tags: profile.tags.map((tag) => tag.name),
+      tags: profile.tags.map((tag) => ({
+        id: tag.id,
+        name: tag.name
+      })),
       appointment: {}, //será implementado
     };
   }
@@ -83,5 +86,11 @@ export class ProfileService {
     await this.tagService.validateTags(tags);
 
     await this.profileRepository.setTags(profileId, tags);
+  }
+
+  async vinculateRandomTags(profileId: string) {
+    const tags = await this.tagService.generateRandomTags();
+
+    await this.profileRepository.setTags(profileId, Array.from(tags));
   }
 }

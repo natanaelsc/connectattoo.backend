@@ -3,6 +3,6 @@ export interface IMeProfile {
   username: string;
   birthDate: string;
   imageProfile: any; // Será implementado posteriormente
-  tags: string[];
+  tags: {id: string, name: string}[]
   appointment: any; // Será implementado posteriormente
 }
