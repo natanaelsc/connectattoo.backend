@@ -13,4 +13,3 @@ export class LocationController {
     return await this.locationService.postUserLocation();
   }
 }
-

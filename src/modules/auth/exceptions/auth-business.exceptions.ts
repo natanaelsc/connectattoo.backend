@@ -1,8 +1,8 @@
 import {
   ConflictException,
   ForbiddenException,
-  NotFoundException, 
-  UnauthorizedException, 
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 export class AuthBusinessExceptions {

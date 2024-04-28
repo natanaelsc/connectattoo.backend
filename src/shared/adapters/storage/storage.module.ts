@@ -17,7 +17,7 @@ import { S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
         };
 
         const storageClient = new S3Client(credentials);
-        
+
         return new StorageService(storageClient);
       },
     },
