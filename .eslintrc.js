@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  project: ['./tsconfig.json', './tsconfig.node.json'],
+  project: ['./tsconfig.json'],
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',
