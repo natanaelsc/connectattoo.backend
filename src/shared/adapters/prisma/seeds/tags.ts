@@ -75,6 +75,7 @@ const dataTags = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Tags {
   export const data = dataTags;
 
