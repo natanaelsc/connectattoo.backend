@@ -34,8 +34,8 @@ jobs:
     - name: Lint
       run: npm run lint
 
-    - name: Prisma
-      run: npx prisma generate
+    - run: rm -rf node_modules/.prisma
+    - run: npx prisma generate
 
     - name: Test
       run: npm run test
