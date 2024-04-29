@@ -1,6 +1,12 @@
-import { IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
-export class UserLocationDto{
+export class UserLocationDto {
   @IsNotEmpty()
   @IsNumber()
   @IsLatitude()
@@ -21,5 +27,5 @@ export class UserLocationDto{
 
   @IsNotEmpty()
   @IsString()
-  platform: string
+  platform: string;
 }

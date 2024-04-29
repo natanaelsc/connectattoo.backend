@@ -5,7 +5,6 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  project: ['./tsconfig.json', './tsconfig.node.json'],
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',
@@ -16,7 +15,10 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'src/shared/adapters/mail/templates'
+  ],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

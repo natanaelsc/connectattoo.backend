@@ -16,7 +16,7 @@ export class MailService {
       html: await EmailConfirmationTemplate({
         name,
         confirmationLink: `${process.env.EMAIL_CONFIRMATION_URL}?token=${accessToken}`,
-      })
+      }),
     });
   }
 }

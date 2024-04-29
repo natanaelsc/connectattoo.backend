@@ -3,6 +3,7 @@ import { JwtAuthPayload } from './jwt-auth-payload.interface';
 import { JwtMailPayload } from './jwt-mail-payload.interface';
 import { JwtSignature } from './jwt-signature.interface';
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace JwtStrategiesImplementation {
   export type Configure = JwtSignOptions | JwtVerifyOptions;
   export type Payload = JwtMailPayload | JwtAuthPayload;
