@@ -8,8 +8,8 @@ export class LocationController {
 
   @Post('/')
   @HttpCode(HttpStatus.OK)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async location(@Body() userLocationDto: UserLocationDto): Promise<void> {
     return await this.locationService.postUserLocation();
   }
 }
-

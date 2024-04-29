@@ -18,7 +18,6 @@ import { MailService } from './mail.service';
       },
       preview: true,
       defaults: { from: `"Connectattoo" <${process.env.MAILDEV_FROM}>` },
-     
     }),
   ],
   providers: [MailService],

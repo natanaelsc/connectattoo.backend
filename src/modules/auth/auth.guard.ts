@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtStrategies: JwtStrategies,
     private reflector: Reflector,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private async isEmailConfirmed(payload: JwtAuthPayload): Promise<void> {
-    const user = await this.userService.getConfirmedUser(payload.email)
+    const user = await this.userService.getConfirmedUser(payload.email);
 
     if (!user.emailConfirmed) {
       throw AuthBusinessExceptions.emailNotVerifiedException();
