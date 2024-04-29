@@ -56,6 +56,20 @@ export class ProfileRepository {
     });
   }
 
+  async setImage(profileId: string, key: string, imageSize: number) {
+    return await this.prismaService.profile.update({
+      where: { id: profileId },
+      data: {
+        imageProfile: {
+          upsert: {
+            update: { size: imageSize, url: key },
+            create: { heigth: 0, width: 0, size: imageSize, url: key },
+          },
+        },
+      },
+    });
+  }
+
   async getTags(profileId: string) {
     const profile = await this.prismaService.profile.findFirstOrThrow({
       where: { id: profileId },
