@@ -33,6 +33,32 @@ export class ProfileService {
         name: tag.name,
       })),
       appointment: {}, //será implementado
+      galleries: [
+        {
+          id: '6524a08f-a04d-4bc2-97f4-c975a329ed29',
+          name: 'Animais Cartoon',
+          cover:
+            'https://pub-777ce89a8a3641429d92a32c49eac191.r2.dev/galleries%2FAnimais%20Cartoon.jpg',
+        },
+        {
+          id: '535c2bc1-46b8-47e2-84ee-ac3dd4cead1f',
+          name: 'Caveiras',
+          cover:
+            'https://pub-777ce89a8a3641429d92a32c49eac191.r2.dev/galleries%2FCaveiras.png',
+        },
+        {
+          id: '5e880889-8093-4b31-82c9-f331ce8fc92e',
+          name: 'Mãos',
+          cover:
+            'https://pub-777ce89a8a3641429d92a32c49eac191.r2.dev/galleries%2FM%C3%A3os.jpg',
+        },
+        {
+          id: 'd8c7cf42-184f-4d03-906d-6b4daa8bc72a',
+          name: 'Costas Fechadas',
+          cover:
+            'https://pub-777ce89a8a3641429d92a32c49eac191.r2.dev/galleries%2FCostas%20Fechadas.jpg',
+        },
+      ],
     };
   }
 
