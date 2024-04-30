@@ -23,12 +23,6 @@ export class UserRepository {
     });
   }
 
-  async getUserById(userId: string): Promise<Nullable<User>> {
-    return await this.prismaService.user.findUnique({
-      where: { id: userId }
-    })
-  }
-
   async create(data: IUser): Promise<User> {
     return await this.prismaService.user.create({ data });
   }
