@@ -8,14 +8,12 @@ import { IUpdateProfile } from './interface/update-profile.interface';
 import { TagService } from '../tag/tag.service';
 import { IGetTags } from '../tag/interface/get-tags.interface';
 import { StorageService } from '../../shared/adapters/storage/storage.service';
-import { UserRepository } from '../user/user.repository';
 import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private profileRepository: ProfileRepository,
-    private userRepository: UserRepository,
     private tagService: TagService,
     private storageService: StorageService,
   ) {}
@@ -26,7 +24,7 @@ export class ProfileService {
 
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
-    const user = await this.userRepository.getUserById(userId);
+    const user = await this.profileRepository.getUserByUserId(userId);
 
     if (!user) throw AuthBusinessExceptions.userNotFoundException();
 
