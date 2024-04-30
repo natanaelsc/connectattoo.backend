@@ -8,24 +8,32 @@ import { IUpdateProfile } from './interface/update-profile.interface';
 import { TagService } from '../tag/tag.service';
 import { IGetTags } from '../tag/interface/get-tags.interface';
 import { StorageService } from '../../shared/adapters/storage/storage.service';
+import { UserRepository } from '../user/user.repository';
+import { AuthBusinessExceptions } from '../auth/exceptions/auth-business.exceptions';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private profileRepository: ProfileRepository,
+    private userRepository: UserRepository,
     private tagService: TagService,
     private storageService: StorageService,
   ) {}
 
-  async me(profileId: string): Promise<IMeProfile> {
+  async me(profileId: string, userId: string): Promise<IMeProfile> {
     const profile =
       await this.profileRepository.getProfileWithTagsAndImageProfile(profileId);
 
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
+    const user = await this.userRepository.getUserById(userId);
+
+    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+
     return {
       displayName: profile.name,
       username: profile.username,
+      email: user.email,
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfile?.url ?? null,
       tags: profile.tags.map((tag) => ({
