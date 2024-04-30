@@ -9,6 +9,6 @@ import { MapsModule } from '../../shared/adapters/maps/maps.module';
   imports: [PrismaModule, MapsModule],
   controllers: [UserController],
   providers: [UserService, UserRepository],
-  exports: [UserService],
+  exports: [UserService, UserRepository],
 })
 export class UserModule {}
