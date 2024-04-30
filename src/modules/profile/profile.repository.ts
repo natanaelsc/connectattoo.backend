@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Profile } from '@prisma/client';
+import { User } from '@prisma/client';
 import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
@@ -19,6 +20,12 @@ export class ProfileRepository {
   async getProfileByUserId(userId: string): Promise<Nullable<Profile>> {
     return await this.prismaService.profile.findFirst({
       where: { user: { id: userId } },
+    });
+  }
+
+  async getUserByUserId(userId: string): Promise<Nullable<User>> {
+    return await this.prismaService.user.findFirst({
+      where: { id: userId },
     });
   }
 
