@@ -96,7 +96,7 @@ export class ProfileService {
       image.buffer,
     );
 
-    await this.profileRepository.setImage(profileId, upload.key, image.size);
+    await this.profileRepository.setImage(profileId, upload.key);
   }
 
   async getTags(profileId: string): Promise<IGetTags[]> {
