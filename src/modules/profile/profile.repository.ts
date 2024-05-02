@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Profile } from '@prisma/client';
-import { User } from '@prisma/client';
+import { getProfileAndUserEmailType } from './interface/get-profile-with-user-email';
 import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
@@ -23,9 +23,12 @@ export class ProfileRepository {
     });
   }
 
-  async getUserByUserId(userId: string): Promise<Nullable<User>> {
-    return await this.prismaService.user.findFirst({
-      where: { id: userId },
+  async getProfileAndUser(
+    profileId: string,
+  ): Promise<getProfileAndUserEmailType> {
+    return await this.prismaService.profile.findFirst({
+      where: { id: profileId },
+      include: { user: true },
     });
   }
 
