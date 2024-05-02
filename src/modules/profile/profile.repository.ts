@@ -3,7 +3,7 @@ import { Profile } from '@prisma/client';
 import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
-import { getProfileWithTagsAndImageProfileType } from './interface/get-profile-with-tags-and-image-profile.interface.';
+import { getProfileWithTagsType } from './interface/get-profile-with-tags-and-image-profile.interface.';
 import { IUpdateProfile } from './interface/update-profile.interface';
 
 @Injectable()
@@ -33,12 +33,10 @@ export class ProfileRepository {
     });
   }
 
-  async getProfileWithTagsAndImageProfile(
-    profileId: string,
-  ): Promise<getProfileWithTagsAndImageProfileType> {
+  async getProfileWithTags(profileId: string): Promise<getProfileWithTagsType> {
     return await this.prismaService.profile.findFirst({
       where: { id: profileId },
-      include: { tags: true, imageProfile: true },
+      include: { tags: true },
     });
   }
 
@@ -56,17 +54,10 @@ export class ProfileRepository {
     });
   }
 
-  async setImage(profileId: string, key: string, imageSize: number) {
+  async setImage(profileId: string, key: Nullable<string>) {
     return await this.prismaService.profile.update({
       where: { id: profileId },
-      data: {
-        imageProfile: {
-          upsert: {
-            update: { size: imageSize, url: key },
-            create: { heigth: 0, width: 0, size: imageSize, url: key },
-          },
-        },
-      },
+      data: { imageProfileUrl: key },
     });
   }
 

@@ -18,8 +18,7 @@ export class ProfileService {
   ) {}
 
   async me(profileId: string): Promise<IMeProfile> {
-    const profile =
-      await this.profileRepository.getProfileWithTagsAndImageProfile(profileId);
+    const profile = await this.profileRepository.getProfileWithTags(profileId);
 
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
@@ -27,7 +26,7 @@ export class ProfileService {
       displayName: profile.name,
       username: profile.username,
       birthDate: profile.birthDate,
-      imageProfile: profile.imageProfile?.url ?? null,
+      imageProfile: profile.imageProfileUrl,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
