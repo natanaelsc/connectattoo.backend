@@ -25,7 +25,7 @@ export class ProfileController {
 
   @Get('/me')
   async me(@Req() req: ISignedRequest): Promise<IMeProfile> {
-    return await this.profileService.me(req.user.profileId, req.user.userId);
+    return await this.profileService.me(req.user.profileId);
   }
 
   @Get('tags')
