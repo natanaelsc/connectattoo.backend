@@ -18,20 +18,21 @@ export class ProfileService {
     private storageService: StorageService,
   ) {}
 
-  async me(profileId: string, userId: string): Promise<IMeProfile> {
+  async me(profileId: string): Promise<IMeProfile> {
     const profile =
       await this.profileRepository.getProfileWithTagsAndImageProfile(profileId);
 
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
-    const user = await this.profileRepository.getUserByUserId(userId);
+    const profileAndUser =
+      await this.profileRepository.getProfileAndUser(profileId);
 
-    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+    if (!profileAndUser) throw AuthBusinessExceptions.userNotFoundException();
 
     return {
       displayName: profile.name,
       username: profile.username,
-      email: user.email,
+      email: profileAndUser.user?.email ?? null,
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfile?.url ?? null,
       tags: profile.tags.map((tag) => ({
