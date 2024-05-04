@@ -91,12 +91,15 @@ export class ProfileService {
     }
 
     const upload = await this.storageService.uploadFile(
-      '/profile',
+      'profile',
       `${profile.id}.${image.originalname.split('.')[1]}`,
       image.buffer,
     );
 
-    await this.profileRepository.setImage(profileId, upload.key);
+    await this.profileRepository.setImage(
+      profileId,
+      `${process.env.STORAGE_ENDPOINT}/${upload.key}`,
+    );
   }
 
   async getTags(profileId: string): Promise<IGetTags[]> {
