@@ -19,8 +19,7 @@ export class ProfileService {
   ) {}
 
   async me(profileId: string): Promise<IMeProfile> {
-    const profile =
-      await this.profileRepository.getProfileWithTagsAndImageProfile(profileId);
+    const profile = await this.profileRepository.getProfileWithTags(profileId);
 
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
@@ -34,7 +33,7 @@ export class ProfileService {
       username: profile.username,
       email: profileAndUser.user?.email ?? null,
       birthDate: profile.birthDate,
-      imageProfile: profile.imageProfile?.url ?? null,
+      imageProfile: profile.imageProfileUrl,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
@@ -104,7 +103,7 @@ export class ProfileService {
       image.buffer,
     );
 
-    await this.profileRepository.setImage(profileId, upload.key, image.size);
+    await this.profileRepository.setImage(profileId, upload.key);
   }
 
   async getTags(profileId: string): Promise<IGetTags[]> {
