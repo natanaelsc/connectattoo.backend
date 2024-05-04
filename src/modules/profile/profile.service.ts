@@ -102,6 +102,26 @@ export class ProfileService {
     );
   }
 
+  async deleteImage(profileId: string): Promise<void> {
+    const profile = await this.profileRepository.getProfileById(profileId);
+
+    if (!profile) {
+      throw ProfileBusinessExceptions.profileNotFoundException();
+    }
+
+    if (!profile.imageProfileUrl)
+      throw ProfileBusinessExceptions.imageProfileNotFoundException();
+
+    await this.storageService.deleteFile(
+      profile.imageProfileUrl
+        .split(process.env.STORAGE_ENDPOINT!)
+        .pop()!
+        .substring(1),
+    );
+
+    await this.profileRepository.setImage(profileId, null);
+  }
+
   async getTags(profileId: string): Promise<IGetTags[]> {
     const profile = await this.profileRepository.getProfileById(profileId);
 

@@ -5,6 +5,7 @@ import {
   Patch,
   Post,
   Put,
+  Delete,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -57,5 +58,10 @@ export class ProfileController {
     image: Express.Multer.File,
   ): Promise<void> {
     await this.profileService.updateImage(req.user.profileId, image);
+  }
+
+  @Delete('/me/image')
+  async deleteImage(@Req() req: ISignedRequest): Promise<void> {
+    await this.profileService.deleteImage(req.user.profileId);
   }
 }
