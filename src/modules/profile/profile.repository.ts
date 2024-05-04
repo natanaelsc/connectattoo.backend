@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Profile } from '@prisma/client';
-import { getProfileAndUserEmailType } from './interface/get-profile-with-user-email';
 import { PrismaService } from '~/shared/adapters/prisma/prisma.service';
 import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
 import { getProfileWithTagsType } from './interface/get-profile-with-tags-and-image-profile.interface.';
 import { IUpdateProfile } from './interface/update-profile.interface';
+import { getProfileWithUserType } from './interface/get-profile-with-user';
 
 @Injectable()
 export class ProfileRepository {
@@ -25,7 +25,7 @@ export class ProfileRepository {
 
   async getProfileAndUser(
     profileId: string,
-  ): Promise<getProfileAndUserEmailType> {
+  ): Promise<getProfileWithUserType> {
     return await this.prismaService.profile.findFirst({
       where: { id: profileId },
       include: { user: true },
