@@ -5,6 +5,7 @@ import { Nullable } from '~/shared/interface/nullable.type';
 import { ICreateProfile } from './interface/create-profile.interface';
 import { getProfileWithTagsType } from './interface/get-profile-with-tags-and-image-profile.interface.';
 import { IUpdateProfile } from './interface/update-profile.interface';
+import { getProfileWithUserType } from './interface/get-profile-with-user';
 
 @Injectable()
 export class ProfileRepository {
@@ -19,6 +20,13 @@ export class ProfileRepository {
   async getProfileByUserId(userId: string): Promise<Nullable<Profile>> {
     return await this.prismaService.profile.findFirst({
       where: { user: { id: userId } },
+    });
+  }
+
+  async getProfileWithUser(profileId: string): Promise<getProfileWithUserType> {
+    return await this.prismaService.profile.findFirst({
+      where: { id: profileId },
+      include: { user: true },
     });
   }
 
