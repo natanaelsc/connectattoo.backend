@@ -98,12 +98,35 @@ export class ProfileService {
     }
 
     const upload = await this.storageService.uploadFile(
-      '/profile',
+      'profile',
       `${profile.id}.${image.originalname.split('.')[1]}`,
       image.buffer,
     );
 
-    await this.profileRepository.setImage(profileId, upload.key);
+    await this.profileRepository.setImage(
+      profileId,
+      `${process.env.STORAGE_ENDPOINT}/${upload.key}`,
+    );
+  }
+
+  async deleteImage(profileId: string): Promise<void> {
+    const profile = await this.profileRepository.getProfileById(profileId);
+
+    if (!profile) {
+      throw ProfileBusinessExceptions.profileNotFoundException();
+    }
+
+    if (!profile.imageProfileUrl)
+      throw ProfileBusinessExceptions.imageProfileNotFoundException();
+
+    await this.storageService.deleteFile(
+      profile.imageProfileUrl
+        .split(process.env.STORAGE_ENDPOINT!)
+        .pop()!
+        .substring(1),
+    );
+
+    await this.profileRepository.setImage(profileId, null);
   }
 
   async getTags(profileId: string): Promise<IGetTags[]> {
