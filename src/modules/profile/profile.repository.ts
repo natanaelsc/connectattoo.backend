@@ -23,9 +23,7 @@ export class ProfileRepository {
     });
   }
 
-  async getProfileAndUser(
-    profileId: string,
-  ): Promise<getProfileWithUserType> {
+  async getProfileWithUser(profileId: string): Promise<getProfileWithUserType> {
     return await this.prismaService.profile.findFirst({
       where: { id: profileId },
       include: { user: true },

@@ -24,14 +24,14 @@ export class ProfileService {
     if (!profile) throw ProfileBusinessExceptions.profileNotFoundException();
 
     const profileAndUser =
-      await this.profileRepository.getProfileAndUser(profileId);
+      await this.profileRepository.getProfileWithUser(profileId);
 
     if (!profileAndUser) throw AuthBusinessExceptions.userNotFoundException();
 
     return {
       displayName: profile.name,
       username: profile.username,
-      email: profileAndUser.user?.email ?? null,
+      email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfileUrl,
       tags: profile.tags.map((tag) => ({
