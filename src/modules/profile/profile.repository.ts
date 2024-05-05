@@ -65,7 +65,7 @@ export class ProfileRepository {
   async setImage(profileId: string, key: Nullable<string>) {
     return await this.prismaService.profile.update({
       where: { id: profileId },
-      data: { imageProfileUrl: key },
+      data: { imageProfileKey: key },
     });
   }
 

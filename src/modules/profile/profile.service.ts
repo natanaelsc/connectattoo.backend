@@ -33,7 +33,7 @@ export class ProfileService {
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
-      imageProfile: profile.imageProfileUrl,
+      imageProfile: profile.imageProfileKey,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
@@ -116,11 +116,11 @@ export class ProfileService {
       throw ProfileBusinessExceptions.profileNotFoundException();
     }
 
-    if (!profile.imageProfileUrl)
+    if (!profile.imageProfileKey)
       throw ProfileBusinessExceptions.imageProfileNotFoundException();
 
     await this.storageService.deleteFile(
-      profile.imageProfileUrl
+      profile.imageProfileKey
         .split(process.env.STORAGE_ENDPOINT!)
         .pop()!
         .substring(1),
