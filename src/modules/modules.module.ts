@@ -4,9 +4,19 @@ import { LocationModule } from './location/location.module';
 import { ProfileModule } from './profile/profile.module';
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
+import { TattooModule } from './tattoo/tattoo.module';
+
+const MODULES = [
+  AuthModule,
+  UserModule,
+  ProfileModule,
+  TagModule,
+  LocationModule,
+  TattooModule,
+];
 
 @Module({
-  imports: [AuthModule, UserModule, ProfileModule, TagModule, LocationModule],
-  exports: [AuthModule, UserModule, ProfileModule, TagModule, LocationModule],
+  imports: MODULES,
+  exports: MODULES,
 })
 export class ModulesModule {}
