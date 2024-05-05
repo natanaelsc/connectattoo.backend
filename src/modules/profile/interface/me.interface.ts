@@ -1,7 +1,7 @@
 export interface IMeProfile {
   displayName: string;
   username: string;
-  email: string | null;
+  email: string;
   birthDate: string;
   imageProfile: any; // Será implementado posteriormente
   tags: { id: string; name: string }[];
