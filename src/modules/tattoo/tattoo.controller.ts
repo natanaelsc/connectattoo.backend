@@ -3,7 +3,7 @@ import { TattooService } from './tattoo.service';
 import { PaginationDTO } from '../../shared/dto/pagination.dto';
 import { ITattooRandom } from './interface/random.interface';
 
-@Controller('tattoo')
+@Controller('tattoos')
 export class TattooController {
   constructor(private tattooService: TattooService) {}
 
