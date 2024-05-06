@@ -33,7 +33,9 @@ export class ProfileService {
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
-      imageProfile: `${process.env.STORAGE_ENDPOINT}/${profile.imageProfileKey}`,
+      imageProfile: profile.imageProfileKey
+        ? `${process.env.STORAGE_ENDPOINT}/${profile.imageProfileKey}`
+        : null,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
