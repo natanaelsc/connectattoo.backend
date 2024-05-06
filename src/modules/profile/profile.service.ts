@@ -33,7 +33,9 @@ export class ProfileService {
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
-      imageProfile: profile.imageProfileUrl,
+      imageProfile: profile.imageProfileKey
+        ? `${process.env.STORAGE_ENDPOINT}/${profile.imageProfileKey}`
+        : null,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
         name: tag.name,
@@ -103,10 +105,7 @@ export class ProfileService {
       image.buffer,
     );
 
-    await this.profileRepository.setImage(
-      profileId,
-      `${process.env.STORAGE_ENDPOINT}/${upload.key}`,
-    );
+    await this.profileRepository.setImage(profileId, upload.key);
   }
 
   async deleteImage(profileId: string): Promise<void> {
@@ -116,15 +115,10 @@ export class ProfileService {
       throw ProfileBusinessExceptions.profileNotFoundException();
     }
 
-    if (!profile.imageProfileUrl)
+    if (!profile.imageProfileKey)
       throw ProfileBusinessExceptions.imageProfileNotFoundException();
 
-    await this.storageService.deleteFile(
-      profile.imageProfileUrl
-        .split(process.env.STORAGE_ENDPOINT!)
-        .pop()!
-        .substring(1),
-    );
+    await this.storageService.deleteFile(profile.imageProfileKey);
 
     await this.profileRepository.setImage(profileId, null);
   }

@@ -27,7 +27,7 @@ model Profile {
   name            String
   username        String
   birthDate       String
-  imageProfileUrl String?
+  imageProfileKey String?
   user            User?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
