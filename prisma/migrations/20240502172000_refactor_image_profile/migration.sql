@@ -13,7 +13,7 @@ DROP INDEX "Profile_imageProfileId_key";
 
 -- AlterTable
 ALTER TABLE "Profile" DROP COLUMN "imageProfileId",
-ADD COLUMN     "imageProfileUrl" TEXT;
+ADD COLUMN     "imageProfileKey" TEXT;
 
 -- DropTable
 DROP TABLE "ImageProfile";
