@@ -1,3 +1,21 @@
+FROM node:18-alpine AS dependencies
+
+RUN apk update && apk --no-cache add git
+
+WORKDIR /api
+
+COPY --chmod=755 package*.json ./
+
+COPY --chmod=755 .husky ./.husky
+
+COPY --chmod=755 .git[t] ./.git
+
+RUN if [ -d .git ]; then git submodule update --init --recursive ; fi
+
+RUN npm ci --ignore-scripts --omit=optional
+
+USER node
+
 FROM node:18-alpine AS build
 
 RUN apk --no-cache add git
