@@ -1,4 +1,4 @@
-FROM node:18-alpine AS dependencies
+FROM node:18-alpine AS development
 
 RUN apk update && apk --no-cache add git
 
