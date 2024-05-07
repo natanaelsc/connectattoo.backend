@@ -1,4 +1,6 @@
-FROM node:18-alpine AS development
+ARG BASE=node:18-alpine3.19
+
+FROM ${BASE} AS development
 
 RUN apk update && apk --no-cache add git
 
@@ -16,36 +18,40 @@ RUN npm ci --ignore-scripts --omit=optional
 
 USER node
 
-FROM node:18-alpine AS build
-
-RUN apk --no-cache add git
+FROM ${BASE} AS build
 
 WORKDIR /api
 
-RUN git clone --recurse-submodules https://github.com/connectattoo/connectattoo.backend .
+COPY --chmod=755 . .
 
-COPY --chmod=755 tsconfig.json package*.json nest-cli.json .gitmodules ./
+COPY --chmod=755 --from=development /api/node_modules ./node_modules
+
+COPY --chmod=755 tsconfig.json package*.json nest-cli.json ./
 
 COPY --chmod=755 /src ./src
-
-ENV NODE_ENV production
-
-RUN npm ci --only=production && npm cache clean --force
 
 RUN npx prisma generate
 
 RUN npm run build
 
+RUN npm prune --ignore-scripts --omit=dev && \
+    rm -rf node_modules/.cache && \
+    npm cache clean --force
+
 USER node
 
-FROM node:18-alpine AS production
+FROM ${BASE} AS production
 
 WORKDIR /api
 
-COPY --from=build /api/node_modules ./node_modules
+COPY --chmod=755 --from=build /api/node_modules ./node_modules
 
-COPY --from=build /api/dist ./dist
+COPY --chmod=755 --from=build /api/dist ./dist
 
-COPY --from=build /api/prisma ./prisma
+COPY --chmod=755 --from=build /api/prisma ./prisma
 
-CMD ["/bin/sh", "-c", "npx prisma migrate deploy;node dist/shared/adapters/prisma/seeds/index.js;node dist/main.js"]
+COPY --chmod=755 --from=build /api/package.json ./
+
+USER node
+
+CMD [ "/bin/sh", "-c", "npx prisma migrate deploy;npm run seed;npm run start:prod" ]
