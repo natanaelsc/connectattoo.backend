@@ -6,6 +6,8 @@ services:
     build:
       context: .
       target: production
+    environment:
+      - NODE_ENV=production
     restart: on-failure
     env_file:
       - .env
