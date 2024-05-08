@@ -5,10 +5,8 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    environment:
-      - NODE_ENV=development
-    restart: 'on-failure'
+      target: development
+    restart: on-failure
     env_file:
       - .env
     ports:
