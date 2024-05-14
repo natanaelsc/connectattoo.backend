@@ -14,6 +14,7 @@ export class StorageService {
     path: string,
     filename: string,
     file: Buffer,
+    contentType: string,
   ): Promise<IUploadFile> {
     if (!path.endsWith('/')) {
       path = path + '/';
@@ -25,6 +26,7 @@ export class StorageService {
       Bucket: process.env.STORAGE_BUCKET,
       Key: key,
       Body: file,
+      ContentType: contentType,
     });
 
     await this.storageClient.send(object);
