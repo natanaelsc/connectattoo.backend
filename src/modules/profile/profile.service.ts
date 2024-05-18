@@ -28,13 +28,18 @@ export class ProfileService {
 
     if (!profileAndUser) throw AuthBusinessExceptions.userNotFoundException();
 
+    const storageUrl =
+      process.env.NODE_ENV != 'production'
+        ? `${process.env.STORAGE_PUB_DEV}`
+        : `${process.env.STORAGE_ENDPOINT}/${process.env.STORAGE_BUCKET}`;
+
     return {
       displayName: profile.name,
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
       imageProfile: profile.imageProfileKey
-        ? `${process.env.STORAGE_ENDPOINT}/${profile.imageProfileKey}`
+        ? `${storageUrl}/${profile.imageProfileKey}`
         : null,
       tags: profile.tags.map((tag) => ({
         id: tag.id,
