@@ -108,6 +108,7 @@ export class ProfileService {
       'profile',
       `${profile.id}.${image.originalname.split('.')[1]}`,
       image.buffer,
+      image.mimetype,
     );
 
     await this.profileRepository.setImage(profileId, upload.key);
