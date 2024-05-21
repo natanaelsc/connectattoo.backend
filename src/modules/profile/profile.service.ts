@@ -16,7 +16,7 @@ export class ProfileService {
     private profileRepository: ProfileRepository,
     private tagService: TagService,
     private storageService: StorageService,
-  ) {}
+  ) { }
 
   async me(profileId: string): Promise<IMeProfile> {
     const profile = await this.profileRepository.getProfileWithTags(profileId);
@@ -29,7 +29,7 @@ export class ProfileService {
     if (!profileAndUser) throw AuthBusinessExceptions.userNotFoundException();
 
     const storageUrl =
-      process.env.NODE_ENV != 'production'
+      isDevEnvironment()
         ? `${process.env.STORAGE_PUB_DEV}`
         : `${process.env.STORAGE_ENDPOINT}/${process.env.STORAGE_BUCKET}`;
 
