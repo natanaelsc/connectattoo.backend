@@ -1,6 +1,6 @@
+import { S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
 import { Module } from '@nestjs/common';
 import { StorageService } from './storage.service';
-import { S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
 
 @Module({
   providers: [
@@ -14,6 +14,7 @@ import { S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
             accessKeyId: process.env.STORAGE_ACCESS_KEY_ID!,
             secretAccessKey: process.env.STORAGE_SECRET_ACCESS_KEY!,
           },
+          forcePathStyle: true,
         };
 
         const storageClient = new S3Client(credentials);
