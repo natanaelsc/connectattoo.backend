@@ -9,28 +9,26 @@ services:
     environment:
       - NODE_ENV=production
     restart: on-failure
-    env_file:
-      - .env
     ports:
       - ${PORT:-3000}:${PORT:-3000}
+    networks:
+      - connectattoo
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - connectattoo
+    env_file:
+      - .env
 
   postgres:
     container_name: postgres
     image: postgres:alpine
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    env_file:
-      - .env
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     networks:
       - connectattoo
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - ./.docker/postgres/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     healthcheck:
@@ -38,20 +36,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - .env
 
   localstack:
     container_name: localstack
     image: localstack/localstack
     ports:
       - 4566:4566
-    environment:
-      - SERVICES=s3
-    env_file:
-      - .env
-    volumes:
-      - ./.docker/localstack/entrypoint.sh:/etc/localstack/init/ready.d/entrypoint.sh
     networks:
       - connectattoo
+    environment:
+      - SERVICES=s3
+    volumes:
+      - ./.docker/localstack/entrypoint.sh:/etc/localstack/init/ready.d/entrypoint.sh
+    env_file:
+      - .env
 
 networks:
   connectattoo:
