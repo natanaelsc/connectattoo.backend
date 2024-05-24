@@ -1,3 +1,3 @@
-export function isDevEnvironment(): boolean{
-    return !!process.env.NODE_ENV
+export function isDevEnvironment(): boolean {
+  return !!process.env.NODE_ENV;
 }
