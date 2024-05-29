@@ -74,7 +74,7 @@ export class ProfileRepository {
     return await this.prismaService.profile.update({
       where: { id: profileId },
       data: {
-        name: data.displayName,
+        name: data.name,
         username: data.username,
         birthDate: data.birthDate,
       },
