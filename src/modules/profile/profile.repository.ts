@@ -33,17 +33,19 @@ export class ProfileRepository {
 
   async getProfileByUsernameOrEmail(
     data: IPatchProfile,
-  ): Promise<getProfileWithUserType> {
-    return await this.prismaService.profile.findFirst({
+  ): Promise<getProfileWithUserType[]> {
+    return await this.prismaService.profile.findMany({
       include: { user: true },
       where: {
         OR: [
           {
+            username: { equals: data.username },
+          },
+          {
             user: {
-              email: { equals: data.email },
+              email: data.email,
             },
           },
-          { username: { equals: data.username } },
         ],
       },
     });
