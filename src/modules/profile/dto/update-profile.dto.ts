@@ -5,7 +5,7 @@ import { ISO8601 } from 'src/shared/interface/ISO8601.type';
 export class UpdateProfileDTO implements IUpdateProfile {
   @IsNotEmpty()
   @IsString()
-  displayName: string;
+  name: string;
 
   @IsNotEmpty()
   @IsString()

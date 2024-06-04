@@ -6,6 +6,7 @@ import { ICreateProfile } from './interface/create-profile.interface';
 import { getProfileWithTagsType } from './interface/get-profile-with-tags-and-image-profile.interface.';
 import { IUpdateProfile } from './interface/update-profile.interface';
 import { getProfileWithUserType } from './interface/get-profile-with-user';
+import { IPatchProfile } from './interface/patch-profile.interface';
 
 @Injectable()
 export class ProfileRepository {
@@ -27,6 +28,25 @@ export class ProfileRepository {
     return await this.prismaService.profile.findFirst({
       where: { id: profileId },
       include: { user: true },
+    });
+  }
+
+  async getProfileByUsernameOrEmail(
+    data: IPatchProfile,
+  ): Promise<Nullable<Profile>> {
+    return await this.prismaService.profile.findFirst({
+      where: {
+        OR: [
+          {
+            username: { equals: data.username },
+          },
+          {
+            user: {
+              email: data.email,
+            },
+          },
+        ],
+      },
     });
   }
 
@@ -55,8 +75,24 @@ export class ProfileRepository {
     return await this.prismaService.profile.update({
       where: { id: profileId },
       data: {
-        name: data.displayName,
+        name: data.name,
         username: data.username,
+        birthDate: data.birthDate,
+      },
+    });
+  }
+
+  async patchProfile(profileId: string, data: IPatchProfile): Promise<Profile> {
+    return await this.prismaService.profile.update({
+      where: { id: profileId },
+      data: {
+        name: data.name,
+        username: data.username,
+        user: {
+          update: {
+            email: data.email,
+          },
+        },
         birthDate: data.birthDate,
       },
     });

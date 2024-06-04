@@ -10,6 +10,7 @@ import { ICreateProfile } from './interface/create-profile.interface';
 import { IMeProfile } from './interface/me.interface';
 import { IUpdateProfile } from './interface/update-profile.interface';
 import { ProfileRepository } from './profile.repository';
+import { IPatchProfile } from './interface/patch-profile.interface';
 
 @Injectable()
 export class ProfileService {
@@ -34,7 +35,7 @@ export class ProfileService {
       : `${process.env.STORAGE_ENDPOINT}/${process.env.STORAGE_BUCKET}`;
 
     return {
-      displayName: profile.name,
+      name: profile.name,
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
@@ -92,6 +93,22 @@ export class ProfileService {
     }
 
     await this.profileRepository.updateProfile(profileId, body);
+  }
+
+  async patchMe(
+    profileId: string,
+    body: IPatchProfile,
+  ): Promise<IPatchProfile> {
+    const profileData =
+      await this.profileRepository.getProfileByUsernameOrEmail(body);
+
+    if (profileData) {
+      throw ProfileBusinessExceptions.usernameOrEmailAlreadyExistsException();
+    }
+
+    await this.profileRepository.patchProfile(profileId, body);
+
+    return body;
   }
 
   async updateImage(

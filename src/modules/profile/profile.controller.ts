@@ -19,6 +19,8 @@ import { ArrayLengthPipe } from '../../shared/utils/array-length.util';
 import { IGetTags } from '../tag/interface/get-tags.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateImageDTO } from './dto/update-image.dto';
+import { PatchProfileDTO } from './dto/patch-profile.dto';
+import { IPatchProfile } from './interface/patch-profile.interface';
 
 @Controller('profile')
 export class ProfileController {
@@ -48,6 +50,14 @@ export class ProfileController {
     @Body() body: IUpdateProfile,
   ): Promise<void> {
     return await this.profileService.updateMe(req.user.profileId, body);
+  }
+
+  @Patch('/me')
+  async patchMe(
+    @Req() req: ISignedRequest,
+    @Body() body: PatchProfileDTO,
+  ): Promise<IPatchProfile> {
+    return await this.profileService.patchMe(req.user.profileId, body);
   }
 
   @Patch('/me/image')

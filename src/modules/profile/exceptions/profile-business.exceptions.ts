@@ -12,4 +12,8 @@ export class ProfileBusinessExceptions {
   static profileAlreadyExistsException() {
     throw new ConflictException('Usuário já cadastrado.');
   }
+
+  static usernameOrEmailAlreadyExistsException() {
+    throw new ConflictException('Nome de usuário ou email já cadastrado.');
+  }
 }
