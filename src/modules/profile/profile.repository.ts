@@ -33,9 +33,8 @@ export class ProfileRepository {
 
   async getProfileByUsernameOrEmail(
     data: IPatchProfile,
-  ): Promise<getProfileWithUserType[]> {
-    return await this.prismaService.profile.findMany({
-      include: { user: true },
+  ): Promise<Nullable<Profile>> {
+    return await this.prismaService.profile.findFirst({
       where: {
         OR: [
           {

@@ -97,38 +97,13 @@ export class ProfileService {
 
   async patchMe(
     profileId: string,
-    { name, username, email, birthDate }: IPatchProfile,
+    body: IPatchProfile,
   ): Promise<IPatchProfile> {
-    const body = {
-      name,
-      username,
-      email,
-      birthDate,
-    };
     const profileData =
       await this.profileRepository.getProfileByUsernameOrEmail(body);
 
-    let emailAlreadyExists = false;
-    let profileAlreadyExists = false;
-    profileData.map(async (profile) => {
-      if (profile?.username == username) {
-        profileAlreadyExists = true;
-      }
-
-      if (profile?.user?.email == email) {
-        emailAlreadyExists = true;
-      }
-    });
-
-    if (profileAlreadyExists) {
-      throw ProfileBusinessExceptions.profileAlreadyExistsException();
-    }
-
-    if (emailAlreadyExists) {
-      const newBody = { ...body };
-      delete newBody.email;
-      await this.profileRepository.patchProfile(profileId, newBody);
-      return body;
+    if (profileData) {
+      throw ProfileBusinessExceptions.usernameOrEmailAlreadyExistsException();
     }
 
     await this.profileRepository.patchProfile(profileId, body);
