@@ -35,7 +35,7 @@ export class ProfileService {
       : `${process.env.STORAGE_ENDPOINT}/${process.env.STORAGE_BUCKET}`;
 
     return {
-      displayName: profile.name,
+      name: profile.name,
       username: profile.username,
       email: profileAndUser.user?.email ?? '',
       birthDate: profile.birthDate,
