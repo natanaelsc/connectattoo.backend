@@ -1,5 +1,5 @@
 export interface IMeProfile {
-  displayName: string;
+  name: string;
   username: string;
   email: string;
   birthDate: string;
