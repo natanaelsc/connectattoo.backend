@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TagRepository } from './tag.repository';
-import { TagBusinessExceptions } from './exceptions/profile-business.exceptions';
+import { TagBusinessExceptions } from './exceptions/tags-business.exceptions';
 import { IGetTags } from './interface/get-tags.interface';
 
 @Injectable()
