@@ -9,12 +9,19 @@ export class ArrayLengthPipe implements PipeTransform {
   ) {}
 
   transform(value: string[]) {
-    if (!Array.isArray(value))
-      throw GenericValidationsExceptions.NotIsArrayException();
+    if (!Array.isArray(value)) this.notIsArrayValidation();
 
     if (value.length > this.max || value.length < this.min)
-      throw GenericValidationsExceptions.ArrayLengthException();
+      this.arrayLengthValidation();
 
     return value;
+  }
+
+  protected notIsArrayValidation() {
+    throw GenericValidationsExceptions.NotIsArrayException();
+  }
+
+  protected arrayLengthValidation() {
+    throw GenericValidationsExceptions.ArrayLengthException();
   }
 }
