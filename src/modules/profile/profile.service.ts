@@ -154,12 +154,10 @@ export class ProfileService {
     return await this.profileRepository.getTags(profileId);
   }
 
-  async setTags(profileId: string, tags: string[]): Promise<string[]> {
+  async setTags(profileId: string, tags: string[]): Promise<void> {
     await this.tagService.validateTags(tags);
 
     await this.profileRepository.setTags(profileId, tags);
-
-    return tags;
   }
 
   async vinculateRandomTags(profileId: string) {

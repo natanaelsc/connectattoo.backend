@@ -40,8 +40,8 @@ export class ProfileController {
     @Req() req: ISignedRequest,
     @Body(new TagArrayLengthPipe(5, 5), ArrayDuplicatedIndexPipe)
     tags: string[],
-  ): Promise<string[]> {
-    return await this.profileService.setTags(req.user.profileId, tags);
+  ): Promise<void> {
+    await this.profileService.setTags(req.user.profileId, tags);
   }
 
   @Put('/me')
