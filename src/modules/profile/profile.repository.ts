@@ -118,7 +118,7 @@ export class ProfileRepository {
     return await this.prismaService.profile.update({
       where: { id: profileId },
       data: {
-        tags: { connect: tags.map((tag) => ({ id: tag })) },
+        tags: { set: tags.map((tag) => ({ id: tag })) },
       },
     });
   }

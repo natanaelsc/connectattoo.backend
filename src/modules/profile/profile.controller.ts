@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Patch,
-  Post,
   Put,
   Delete,
   Req,
@@ -15,12 +14,12 @@ import { ISignedRequest } from '../auth/interfaces/signed-request.interface';
 import { IMeProfile } from './interface/me.interface';
 import { IUpdateProfile } from './interface/update-profile.interface';
 import { ArrayDuplicatedIndexPipe } from '../../shared/utils/array-duplicated-index.util';
-import { ArrayLengthPipe } from '../../shared/utils/array-length.util';
 import { IGetTags } from '../tag/interface/get-tags.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateImageDTO } from './dto/update-image.dto';
 import { PatchProfileDTO } from './dto/patch-profile.dto';
 import { IPatchProfile } from './interface/patch-profile.interface';
+import { TagArrayLengthPipe } from '../tag/pipes/tag-array-length.pipe';
 
 @Controller('profile')
 export class ProfileController {
@@ -31,17 +30,18 @@ export class ProfileController {
     return await this.profileService.me(req.user.profileId);
   }
 
-  @Get('tags')
+  @Get('/me/tags')
   async getTags(@Req() req: ISignedRequest): Promise<IGetTags[]> {
     return await this.profileService.getTags(req.user.profileId);
   }
 
-  @Post('tags')
+  @Patch('/me/tags')
   async setTags(
     @Req() req: ISignedRequest,
-    @Body(new ArrayLengthPipe(1, 5), ArrayDuplicatedIndexPipe) tags: string[],
-  ): Promise<void> {
-    await this.profileService.setTags(req.user.profileId, tags);
+    @Body(new TagArrayLengthPipe(5, 5), ArrayDuplicatedIndexPipe)
+    tags: string[],
+  ): Promise<string[]> {
+    return await this.profileService.setTags(req.user.profileId, tags);
   }
 
   @Put('/me')
