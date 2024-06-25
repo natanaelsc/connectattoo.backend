@@ -1,4 +1,8 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 
 export class TagBusinessExceptions {
   static tagNotFoundException() {
@@ -11,5 +15,11 @@ export class TagBusinessExceptions {
 
   static tagAlreadyExistsException() {
     throw new ConflictException('Tag já cadastrado.');
+  }
+
+  static tagsLengthIncorrectException() {
+    throw new BadRequestException(
+      'A quantidade de tags não deve ser superior ou inferior a 5.',
+    );
   }
 }
