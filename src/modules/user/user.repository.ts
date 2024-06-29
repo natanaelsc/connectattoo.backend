@@ -14,6 +14,10 @@ export class UserRepository {
     return await this.prismaService.user.findUnique({ where: { email } });
   }
 
+  async getUserById(id: string): Promise<Nullable<User>> {
+    return await this.prismaService.user.findUnique({ where: { id } });
+  }
+
   async getUserAndProfileByEmail(
     email: string,
   ): Promise<IGetUserAndProfileByEmail> {
