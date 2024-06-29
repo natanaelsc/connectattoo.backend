@@ -11,6 +11,6 @@ export class UserController {
   async getConfirmedUser(
     @Req() request: ISignedRequest,
   ): Promise<IGetConfirmed> {
-    return await this.userService.getConfirmedUser(request.user.email);
+    return await this.userService.getConfirmedUser(request.user.userId);
   }
 }

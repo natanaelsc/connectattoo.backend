@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private async isEmailConfirmed(payload: JwtAuthPayload): Promise<void> {
-    const user = await this.userService.getConfirmedUser(payload.email);
+    const user = await this.userService.getConfirmedUser(payload.userId);
 
     if (!user.emailConfirmed) {
       throw AuthBusinessExceptions.emailNotVerifiedException();

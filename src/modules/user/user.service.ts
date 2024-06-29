@@ -24,6 +24,14 @@ export class UserService {
     return user;
   }
 
+  async getUserById(userId: string): Promise<User> {
+    const user = await this.userRepository.getUserById(userId);
+
+    if (!user) throw AuthBusinessExceptions.userNotFoundException();
+
+    return user;
+  }
+
   async getUserAndProfileByEmail(
     email: string,
   ): Promise<IGetUserAndProfileByEmail> {
@@ -60,8 +68,8 @@ export class UserService {
     await this.userRepository.update({ email }, { isEmailConfirmed: true });
   }
 
-  async getConfirmedUser(email: string): Promise<IGetConfirmed> {
-    const user = await this.userRepository.getUserByEmail(email);
+  async getConfirmedUser(userId: string): Promise<IGetConfirmed> {
+    const user = await this.userRepository.getUserById(userId);
 
     if (!user) throw AuthBusinessExceptions.userNotFoundException();
 
