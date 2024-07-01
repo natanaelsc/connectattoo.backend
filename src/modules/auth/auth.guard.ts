@@ -20,15 +20,15 @@ export class AuthGuard implements CanActivate {
 
     const isPublic = this.isPublic(context);
 
-    if (isPublic) return true;
+    if (!isPublic) {
+      const token = this.extractTokenFromHeader(request);
 
-    const token = this.extractTokenFromHeader(request);
+      const payload = await this.jwtStrategies.auth.verify(token);
 
-    const payload = await this.jwtStrategies.auth.verify(token);
+      await this.isEmailConfirmed(payload);
 
-    await this.isEmailConfirmed(payload);
-
-    request['user'] = payload;
+      request['user'] = payload;
+    }
 
     return true;
   }

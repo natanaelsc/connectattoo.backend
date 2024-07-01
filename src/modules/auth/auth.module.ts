@@ -8,6 +8,7 @@ import { JwtStrategies } from './jwt.strategies';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { ProfileModule } from '../profile/profile.module';
+import { WSAuthGuard } from './ws-auth.guard';
 
 @Module({
   imports: [UserModule, JwtModule, MailModule, ProfileModule],
@@ -16,7 +17,8 @@ import { ProfileModule } from '../profile/profile.module';
     AuthService,
     JwtStrategies,
     { provide: APP_GUARD, useClass: AuthGuard },
+    WSAuthGuard,
   ],
-  exports: [JwtStrategies],
+  exports: [JwtStrategies, WSAuthGuard],
 })
 export class AuthModule {}

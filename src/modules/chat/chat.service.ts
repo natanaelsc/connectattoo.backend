@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { ISocket } from './interface/socket.interface';
 import { IServer } from './interface/server.interface';
+import { WsException } from '@nestjs/websockets';
+import { JwtStrategies } from '../auth/jwt.strategies';
 
 @Injectable()
 export class ChatService {
-  handleConnection(client: ISocket, server: IServer) {
-    const auth = client.handshake.query.profile as string;
+  constructor(private jwtStrategies: JwtStrategies) {}
 
-    if (!auth) throw new Error('Unauthorized');
+  async handleConnection(client: ISocket, server: IServer) {
+    const auth = client.handshake.headers.authorization?.split(' ')[1];
 
-    client.profileId = auth;
+    if (!auth) throw new WsException('Unauthorized');
+
+    const { profileId } = await this.jwtStrategies.auth.verify(auth);
+
+    client.profileId = profileId;
 
     server.profiles.set(client.profileId, client.id);
   }
