@@ -48,6 +48,8 @@ COPY --chmod=755 --from=build /api/node_modules ./node_modules
 
 COPY --chmod=755 --from=build /api/dist ./dist
 
+COPY --chmod=755 --from=build /api/pages ./pages
+
 COPY --chmod=755 --from=build /api/prisma ./prisma
 
 COPY --chmod=755 --from=build /api/package.json ./
