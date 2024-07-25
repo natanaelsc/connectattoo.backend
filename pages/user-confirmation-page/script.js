@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
   clearTimeout(id);
   if (validateConfirmationToken.ok || validateConfirmationToken.status == 403) {
-    return (document.body.style = 'visibility: visible');
+    document.body.style = 'visibility: visible';
+    return;
   }
   content.innerHTML = '';
   document.body.style = 'visibility: visible';
