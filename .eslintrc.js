@@ -17,7 +17,8 @@ module.exports = {
   },
   ignorePatterns: [
     '.eslintrc.js',
-    'src/shared/adapters/mail/templates'
+    'src/shared/adapters/mail/templates',
+    'pages/**/*',
   ],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
